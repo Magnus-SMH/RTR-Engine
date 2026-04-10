@@ -118,5 +118,5 @@ RTR-Engine/
 
 **Dependency direction:**
 ```
-Sandbox/ -> RTR/src/ (RTR.h) -> RTR/src/Core + Renderer + Scene -> RTR/src/Platform/OpenGL/ -> vendor/ + OS
+Sandbox/ -> RTR/include/RTR/RTR.h -> RTR/src/RTR/ -> RTR/src/Platform/OpenGL/ -> vendor/ + OS
 ```
