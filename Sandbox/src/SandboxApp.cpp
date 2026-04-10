@@ -1,6 +1,6 @@
 #include <RTR/RTR.h>
 
-int main() 
+int main()
 {
 	return 0;
 }

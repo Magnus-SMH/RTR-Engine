@@ -13,10 +13,10 @@ target_include_directories(RTR
 
 target_link_libraries(RTR
     PUBLIC glm::glm
-    PUBLIC glfw
-    PUBLIC glad
-    PUBLIC imgui
-    PUBLIC stb
+    PRIVATE glfw
+    PRIVATE glad
+    PRIVATE imgui
+    PRIVATE stb
 )
 
 target_compile_definitions(RTR PUBLIC
