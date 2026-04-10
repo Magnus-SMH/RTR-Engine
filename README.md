@@ -107,8 +107,8 @@ RTR-Engine/
 │
 └── assets/ 
    ├── shaders/
-   │  ├── OpenGl/  # 
-   │  └── Vulkan/  # 
+   │  ├── OpenGl/  # GLSL
+   │  └── Vulkan/  # SPIR-V
    │     └── .gitkeep
    ├── models/  #(.gltf .bin)
    └── textures/
