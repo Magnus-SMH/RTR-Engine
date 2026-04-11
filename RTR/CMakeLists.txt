@@ -9,6 +9,7 @@ src/RTR/Core/LayerStack.cpp
 src/RTR/Core/Log.cpp
 src/RTR/Core/UUID.cpp
 src/RTR/Core/Application.cpp
+src/RTR/Core/Window.cpp
 
 src/RTR/ImGui/ImGuiLayer.cpp
 
@@ -17,6 +18,7 @@ src/RTR/Renderer/Camera.cpp
 src/RTR/Renderer/Framebuffer.cpp
 src/RTR/Renderer/Material.cpp
 src/RTR/Renderer/Mesh.cpp
+src/RTR/Renderer/RenderAPI.cpp
 src/RTR/Renderer/RenderCommand.cpp
 src/RTR/Renderer/Renderer.cpp
 src/RTR/Renderer/Renderer3D.cpp
@@ -35,6 +37,9 @@ src/Platform/OpenGL/OpenGLDebug.cpp
 src/Platform/OpenGL/OpenGLFramebuffer.cpp
 src/Platform/OpenGL/OpenGLRendererAPI.cpp
 src/Platform/OpenGL/OpenGLShader.cpp
+
+src/Platform/Desktop/GLFWWindow.cpp
+
 
 )
 

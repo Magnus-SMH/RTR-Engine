@@ -1,0 +1,15 @@
+*
+!.gitignore
+
+# Model formats
+!*.gltf
+!*.bin
+!*.obj
+
+# Shaders
+!*.glsl
+
+# Textures
+!*.png
+!*.jpg
+!*.jpeg

@@ -8,9 +8,13 @@ else()
     add_library(glad INTERFACE)
 endif()
 
-# stb — header only
-add_library(stb INTERFACE)
-target_include_directories(stb INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/stb)
+# stb — static lib
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image.cpp)
+    add_library(stb STATIC ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image.cpp)
+    target_include_directories(stb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/stb)
+else()
+    message(WARNING "stb_image.cpp not found")
+endif()
 
 # imgui
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp)

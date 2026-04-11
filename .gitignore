@@ -35,6 +35,7 @@ Makefile
 
 # vcpkg
 vcpkg_installed/
+vcpkg-configuration.json
 
 # OS
 .DS_Store
