@@ -129,24 +129,24 @@ RTR-Engine/
 * RTR/src/Platform/ implements the interfaces and uses glad, glfw, stb
 * RTR/src/Platform/ can only reach RTR/src/RTR in RendererAPI.cpp for the rendering API or Window.cpp
 
-### Naming Convention im trying to follow:
-Allman brace style
+### Naming Convention im trying to follow:  
+Allman brace style  
 
-Everything is PascalCase, except:
+Everything is PascalCase, except:  
 
-local var and function params is camelCase
+local var and function params is camelCase  
 
-# Prefixes:
-m_   member var
-s_   static var
-k_   constant
-g_   global var
-I    interface class
-T    emplate type param
+# Prefixes:  
+m_   member var  
+s_   static var  
+k_   constant  
+g_   global var  
+I    interface class  
+T    emplate type param  
 
-# Shader var:
-u_   uniform
-v_   varying
-a_   attribute
-o_   output
-r_   resource
+# Shader var:  
+u_   uniform  
+v_   varying  
+a_   attribute  
+o_   output  
+r_   resource  
