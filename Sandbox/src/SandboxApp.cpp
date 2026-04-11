@@ -1,6 +1,6 @@
 #include <RTR/RTR.h>
 
-int main()
+void main()
 {
-	return 0;
+	RTR::Print();
 }
