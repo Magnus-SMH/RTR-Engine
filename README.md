@@ -141,7 +141,6 @@ m_   member var
 s_   static var  
 k_   constant  
 g_   global var  
-I    interface class  
 T    emplate type param  
 
 # Shader var:  
