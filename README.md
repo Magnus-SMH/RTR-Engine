@@ -8,7 +8,7 @@ Unfinished File structure
 ```bash
 RTR-Engine/
 ├── CMakeLists.txt
-├── vcpkg.json (glfw3, glm)
+├── vcpkg.json
 ├── README.md
 ├── .gitignore
 │
@@ -122,9 +122,30 @@ RTR-Engine/
       └── .gitkeep
 ```
 
-### Structure Ideas/goals
+### Structure Ideas/goals:
 
 * Sandbox uses RTR/include/RTR/RTR.h as public inferface
 * RTR/src/RTR/ has api-agnostic logic, defines interfaces and uses: glm, spdlog
 * RTR/src/Platform/ implements the interfaces and uses glad, glfw, stb
 * RTR/src/Platform/ can only reach RTR/src/RTR in RendererAPI.cpp for the rendering API or Window.cpp
+
+### Naming Convention im trying to follow:  
+Allman brace style  
+
+Everything is PascalCase, except:  
+
+local var and function params is camelCase  
+
+# Prefixes:  
+m_   member var  
+s_   static var  
+k_   constant  
+g_   global var  
+T    emplate type param  
+
+# Shader var:  
+u_   uniform  
+v_   varying  
+a_   attribute  
+o_   output  
+r_   resource  
