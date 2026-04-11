@@ -56,9 +56,11 @@ RTR-Engine/
 │     │  │  ├── LayerStack.cpp
 │     │  │  ├── Log.cpp
 │     │  │  ├── Layer.cpp
-│     │  │  └── UUID.cpp
+│     │  │  ├── UUID.cpp
+│     │  │  └── Window.cpp
 │     │  ├── Renderer/  
 │     │  │  ├── Renderer.cpp
+│     │  │  ├── RendererAPI.cpp
 │     │  │  ├── RenderCommand.cpp
 │     │  │  ├── Shader.cpp
 │     │  │  ├── Buffer.cpp
@@ -87,9 +89,11 @@ RTR-Engine/
 │        │  ├── OpenGLVertexArray.h/cpp
 │        │  ├── OpenGLTexture.h/cpp
 │        │  ├── OpenGLFramebuffer.h/cpp
-│        │  ├── OpenGLDebug.h/cpp
-│        └── Vulkan/
-│           └── .gitkeep
+│        │  └── OpenGLDebug.h/cpp
+│        ├── Vulkan/
+│        │  └── .gitkeep
+│        └── Desktop/
+│           └── GLFWWindow.h/cpp
 │
 ├── Sandbox/  # Executable
 │  ├── CMakeLists.txt
@@ -103,20 +107,24 @@ RTR-Engine/
 │  │  ├── include/
 │  │  └── src/
 │  ├── imgui/
-│  └── stb/ 
+│  └── stb/
+│     └── stb_image.h/cpp
 │
 └── assets/ 
    ├── shaders/
    │  ├── OpenGl/  # GLSL
+   │  │  └── .gitkeep
    │  └── Vulkan/  # SPIR-V
    │     └── .gitkeep
    ├── models/  #(.gltf .bin)
+   │  └── .gitkeep
    └── textures/
+      └── .gitkeep
 ```
 
-### Structure Ideas
+### Structure Ideas/goals
 
-**Dependency direction:**
-```
-Sandbox/ -> RTR/include/RTR/RTR.h -> RTR/src/RTR/ -> RTR/src/Platform/OpenGL/ -> vendor/ + OS
-```
+* Sandbox uses RTR/include/RTR/RTR.h as public inferface
+* RTR/src/RTR/ has api-agnostic logic, defines interfaces and uses: glm, spdlog
+* RTR/src/Platform/ implements the interfaces and uses glad, glfw, stb
+* RTR/src/Platform/ can only reach RTR/src/RTR in RendererAPI.cpp for the rendering API or Window.cpp
