@@ -8,7 +8,7 @@ Unfinished File structure
 ```bash
 RTR-Engine/
 ├── CMakeLists.txt
-├── vcpkg.json (glfw3, glm)
+├── vcpkg.json
 ├── README.md
 ├── .gitignore
 │
