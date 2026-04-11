@@ -18,7 +18,7 @@ src/RTR/Renderer/Camera.cpp
 src/RTR/Renderer/Framebuffer.cpp
 src/RTR/Renderer/Material.cpp
 src/RTR/Renderer/Mesh.cpp
-src/RTR/Renderer/RenderAPI.cpp
+src/RTR/Renderer/RendererAPI.cpp
 src/RTR/Renderer/RenderCommand.cpp
 src/RTR/Renderer/Renderer.cpp
 src/RTR/Renderer/Renderer3D.cpp
@@ -43,12 +43,18 @@ src/Platform/Desktop/GLFWWindow.cpp
 
 )
 
+find_package(spdlog CONFIG REQUIRED)
+find_package(EnTT CONFIG REQUIRED)
+
+find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
+
 add_library(RTR STATIC ${RTR_SOURCES})
 
 target_include_directories(RTR
 PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include
 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Platform
+PRIVATE ${TINYGLTF_INCLUDE_DIRS}
 )
 
 target_link_libraries(RTR
@@ -57,4 +63,6 @@ PRIVATE glfw
 PRIVATE glad
 PRIVATE imgui
 PRIVATE stb
+PRIVATE EnTT::EnTT
+PRIVATE spdlog::spdlog
 )
