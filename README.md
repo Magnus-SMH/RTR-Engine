@@ -10,6 +10,7 @@ Inspiration from:
 * All OpenGl Tutorials [(YT-Playlist)](https://www.youtube.com/playlist?list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA)   -     [Github](https://github.com/emeiri/ogldev)
 
 # Unfinished Directory Structure
+mostly empty placeholder files to plan the structure and to implement CMake and vckpg from the beginning.
 ```bash
 RTR-Engine/
 ├── CMakeLists.txt
@@ -115,7 +116,7 @@ RTR-Engine/
 │  └── stb/
 │     └── stb_image.h/cpp
 │
-└── assets/ 
+└── assets/ # To be moved. Dont want global assets
    ├── shaders/
    │  ├── OpenGl/  # GLSL
    │  │  └── .gitkeep
