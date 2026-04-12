@@ -1,6 +1,18 @@
 #include <RTR/RTR.h>
 
-void main()
+class Sandbox : public RTR::Application
 {
-	RTR::Print();
+public:
+	Sandbox()
+	{
+	}
+	~Sandbox()
+	{
+	}
+
+};
+
+RTR::Application* RTR::CreateApplication()
+{
+	return new Sandbox();
 }

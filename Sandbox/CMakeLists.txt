@@ -5,6 +5,10 @@ src/SandboxApp.cpp
 #src/layers/.cpp
 )
 
+if (MSVC)
+    target_compile_options(Sandbox PRIVATE /utf-8)
+endif()
+
 target_link_libraries(Sandbox PRIVATE RTR)
 
 target_compile_features(Sandbox PRIVATE cxx_std_23)

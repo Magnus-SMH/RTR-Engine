@@ -50,6 +50,10 @@ find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
 
 add_library(RTR STATIC ${RTR_SOURCES})
 
+if (MSVC)
+    target_compile_options(RTR PUBLIC /utf-8)
+endif()
+
 target_include_directories(RTR
 PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include
 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
