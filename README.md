@@ -1,7 +1,8 @@
 # RTR-Engine
 Real-Time 3D Only Renderer Engine/Sandbox
 
-Inspiration from TheCherno Hazel but in 3D
+Inspiration from TheCherno Game Engine series
+and C++ Application Architecture - A Mini-Series.
 
 # Directory Structure
 Unfinished File structure
