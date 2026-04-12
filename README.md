@@ -149,3 +149,9 @@ v_   varying
 a_   attribute  
 o_   output  
 r_   resource  
+
+### Note to self:
+* later, make RTR-Editor, split the root assests into engine and editor specific assets.
+* add yaml-cpp into vcpkg
+* Test framework (Catch2?)
+
