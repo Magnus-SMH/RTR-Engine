@@ -1,11 +1,15 @@
 # RTR-Engine
 Real-Time 3D Only Renderer Engine/Sandbox
 
-Inspiration from TheCherno Game Engine series
-and C++ Application Architecture - A Mini-Series.
+Inspiration from:  
+* [TheCherno](https://www.youtube.com/@TheCherno):
+* Game Engine series [(YT-Playlist)](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT)   -   [Github: Hazel](https://github.com/TheCherno/Hazel) 
+* C++ Application Architecture - A Mini-Series. [(YT-Playlist)](https://www.youtube.com/playlist?list=PLlrATfBNZ98cpX2LuxLnLyLEmfD2FPpRA)   -   [Github: Architecture](https://github.com/TheCherno/Architecture)
 
-# Directory Structure
-Unfinished File structure
+* [OGLDEV](https://www.youtube.com/@OGLDEV):
+* All OpenGl Tutorials [(YT-Playlist)](https://www.youtube.com/playlist?list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA)   -     [Github](https://github.com/emeiri/ogldev)
+
+# Unfinished Directory Structure
 ```bash
 RTR-Engine/
 ├── CMakeLists.txt
