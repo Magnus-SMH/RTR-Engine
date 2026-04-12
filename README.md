@@ -161,3 +161,5 @@ r_   resource
 * add yaml-cpp into vcpkg
 * Test framework (Catch2?)
 
+
+Windows 11 x64 | MSVS | C++23 | Opengl 4.6 | GLFW | GLM | Glad 2 | imGui | GLTF | spdlog | enTT | tinygltf |
