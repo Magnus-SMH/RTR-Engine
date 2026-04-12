@@ -135,7 +135,7 @@ RTR-Engine/
 * RTR/src/Platform/ implements the interfaces and uses glad, glfw, stb
 * RTR/src/Platform/ can only reach RTR/src/RTR in RendererAPI.cpp for the rendering API or Window.cpp
 
-### Naming Convention im trying to follow:  
+## Naming Convention im trying to follow:  
 Allman brace style  
 
 Everything is PascalCase, except:  
@@ -156,7 +156,7 @@ a_   attribute
 o_   output  
 r_   resource  
 
-### Note to self:
+## Note to self:
 * later, make RTR-Editor, split the root assests into engine and editor specific assets.
 * add yaml-cpp into vcpkg
 * Test framework (Catch2?)
