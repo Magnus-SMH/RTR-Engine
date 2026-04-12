@@ -20,7 +20,7 @@ RTR-Engine/
 │
 ├── RTR/  # Static library
 │  ├── CMakeLists.txt
-│  ├── include/  # Public headers only — exposed to Sandbox
+│  ├── include/  # Public headers only — exposed to Sandbox via RTR.h
 │  │  └── RTR/
 │  │     ├── RTR.h  # Public API gateway
 │  │     ├── Core/
@@ -55,7 +55,7 @@ RTR-Engine/
 │  │     │  └── TextureLoader.h
 │  │     └── ImGui/
 │  │        └── ImGuiLayer.h
-│  └── src/  # Private - .cpp files + platform headers
+│  └── src/  # Private .cpp files + platform headers
 │     ├── RTR/  # API-Agnostic
 │     │  ├── Core/ 
 │     │  │  ├── Application.cpp
@@ -101,13 +101,13 @@ RTR-Engine/
 │        └── Desktop/
 │           └── GLFWWindow.h/cpp
 │
-├── Sandbox/  # Executable
+├── Sandbox/  # Simple Executable
 │  ├── CMakeLists.txt
 │  └── src/
 │    ├── SandboxApp.cpp
 │    └── layers/
 │
-├── vendor/  # Thrid-party source (imgui, stb, glad)
+├── vendor/  # Thrid-party sources (imgui, stb, glad)
 │  ├── CMakeLists.txt  # Manages vendor directories
 │  ├── glad/
 │  │  ├── include/
