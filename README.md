@@ -107,11 +107,9 @@ RTR-Engine/
 │    ├── SandboxApp.cpp
 │    └── layers/
 │
-├── vendor/  # Thrid-party sources (imgui, stb, glad)
+├── vendor/  # Thrid-party sources
 │  ├── CMakeLists.txt
 │  ├── glad/
-│  │  ├── include/
-│  │  └── src/
 │  ├── imgui/
 │  └── stb/
 │     └── stb_image.h/cpp
