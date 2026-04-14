@@ -158,7 +158,7 @@ r_   resource
 ## Note to self:
 * later, make RTR-Editor, split the root assests into engine and editor specific assets.
 * add yaml-cpp into vcpkg
-* Test framework (Catch2?)
+* Test framework (Catch2?) (headless exe that link to the specific libraries)
 
 
 Windows 11 x64 | MSVS | C++23 | Opengl 4.6 | GLFW | GLM | Glad 2 | imGui | GLTF | spdlog | enTT | tinygltf |
