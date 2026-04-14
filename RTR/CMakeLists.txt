@@ -9,6 +9,7 @@ src/RTR/Assets/TextureLoader.cpp
 add_library(rtr_assets STATIC ${RTR_ASSETS_SOURCES})
 target_link_libraries(rtr_assets
     PUBLIC rtr_core
+    PRIVATE stb
 )
 target_include_directories(rtr_assets
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -45,6 +46,7 @@ add_library(rtr_imgui STATIC ${RTR_IMGUI_SOURCES})
 target_link_libraries(rtr_imgui
     PUBLIC rtr_core
     PUBLIC imgui
+    PRIVATE rtr_imgui_backend
 )
 target_include_directories(rtr_imgui PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
