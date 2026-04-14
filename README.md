@@ -128,6 +128,11 @@ RTR-Engine/
       └── .gitkeep
 ```
 
+### Graphviz command:
+```NOTE
+cd out/build/x64-debug; cmake --graphviz=../../../docs/deps.dot .; dot -Tsvg ../../../docs/deps.dot -o ../../../docs/architecture.svg
+```
+
 ### Structure Ideas/goals:
 
 * Sandbox uses RTR/include/RTR/RTR.h as public inferface

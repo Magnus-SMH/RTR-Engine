@@ -44,3 +44,7 @@ desktop.ini
 
 # Logs
 *.log
+
+# Docs Graphviz generated
+docs/deps.dot*
+docs/*.dot
