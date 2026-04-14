@@ -132,6 +132,7 @@ RTR-Engine/
 ```NOTE
 cd out/build/x64-debug; cmake --graphviz=../../../docs/deps.dot .; dot -Tsvg ../../../docs/deps.dot -o ../../../docs/architecture.svg
 ```
+![Architecture](docs/architecture.svg)
 
 ### Structure Ideas/goals:
 
