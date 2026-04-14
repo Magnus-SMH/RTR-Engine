@@ -11,10 +11,10 @@ namespace RTR
 	{
 		spdlog::set_pattern("%^[%T] [%l] %n: %v%$	(%@)");
 
-		GetCoreLogger() = spdlog::stdout_color_mt("RTR");
-		GetCoreLogger()->set_level(spdlog::level::trace);
+		s_CoreLogger = spdlog::stdout_color_mt("RTR");
+		s_CoreLogger->set_level(spdlog::level::trace);
 
-		GetClientLogger() = spdlog::stdout_color_mt("APP");
-		GetClientLogger()->set_level(spdlog::level::trace);
+		s_ClientLogger = spdlog::stdout_color_mt("APP");
+		s_ClientLogger->set_level(spdlog::level::trace);
 	}
 }

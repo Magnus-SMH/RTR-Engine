@@ -3,16 +3,23 @@
 class Sandbox : public RTR::Application
 {
 public:
-	Sandbox()
+	explicit Sandbox(const RTR::ApplicationSpecification& spec)
+		: RTR::Application(spec)
 	{
+		RTR_CRITICAL("Sandbox created!");
 	}
+
 	~Sandbox()
 	{
 	}
 
 };
 
-RTR::Application* RTR::CreateApplication()
+RTR::Application* RTR::CreateApplication(RTR::ApplicationCommandLineArgs args)
 {
-	return new Sandbox();
+	RTR::ApplicationSpecification spec;
+	spec.Name = "Sandbox";
+	spec.WorkingDirectory = "../Sandbox";
+	spec.CommandLineArgs = args;
+	return new Sandbox(spec);
 }

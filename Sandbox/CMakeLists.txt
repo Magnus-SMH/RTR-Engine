@@ -9,7 +9,7 @@ if (MSVC)
     target_compile_options(Sandbox PRIVATE /utf-8)
 endif()
 
-target_link_libraries(Sandbox PRIVATE RTR)
+target_link_libraries(Sandbox PRIVATE rtr_engine)
 
 target_compile_features(Sandbox PRIVATE cxx_std_23)
 
@@ -19,5 +19,5 @@ $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
 )
 
 set_target_properties(Sandbox PROPERTIES
-VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Sandbox"
 )

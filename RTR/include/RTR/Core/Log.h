@@ -1,6 +1,7 @@
 #pragma once
 
-#include "spdlog/spdlog.h"
+#include <spdlog/spdlog.h>
+#include <memory>
 
 namespace RTR
 {
@@ -9,8 +10,8 @@ namespace RTR
 	public:
 		static void Init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() {return s_CoreLogger;}
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() {return s_ClientLogger;}
+		inline static const std::shared_ptr<spdlog::logger>& GetCoreLogger() {return s_CoreLogger;}
+		inline static const std::shared_ptr<spdlog::logger>& GetClientLogger() {return s_ClientLogger;}
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
