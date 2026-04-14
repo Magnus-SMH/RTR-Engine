@@ -1,10 +1,16 @@
 # RTR-Engine
 Real-Time 3D Only Renderer Engine/Sandbox
 
-Inspiration from TheCherno Hazel but in 3D
+Inspiration from:  
+* [TheCherno](https://www.youtube.com/@TheCherno):
+* Game Engine series [(YT-Playlist)](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT)   -   [Github: Hazel](https://github.com/TheCherno/Hazel) 
+* C++ Application Architecture - A Mini-Series. [(YT-Playlist)](https://www.youtube.com/playlist?list=PLlrATfBNZ98cpX2LuxLnLyLEmfD2FPpRA)   -   [Github: Architecture](https://github.com/TheCherno/Architecture)
 
-# Directory Structure
-Unfinished File structure
+* [OGLDEV](https://www.youtube.com/@OGLDEV):
+* All OpenGl Tutorials [(YT-Playlist)](https://www.youtube.com/playlist?list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA)   -     [Github](https://github.com/emeiri/ogldev)
+
+# Unfinished Directory Structure
+mostly empty placeholder files to plan the structure and to implement CMake and vckpg from the beginning.
 ```bash
 RTR-Engine/
 ├── CMakeLists.txt
@@ -14,7 +20,7 @@ RTR-Engine/
 │
 ├── RTR/  # Static library
 │  ├── CMakeLists.txt
-│  ├── include/  # Public headers only — exposed to Sandbox
+│  ├── include/  # Public headers only — exposed to Sandbox via RTR.h
 │  │  └── RTR/
 │  │     ├── RTR.h  # Public API gateway
 │  │     ├── Core/
@@ -49,7 +55,7 @@ RTR-Engine/
 │  │     │  └── TextureLoader.h
 │  │     └── ImGui/
 │  │        └── ImGuiLayer.h
-│  └── src/  # Private - .cpp files + platform headers
+│  └── src/  # Private .cpp files + platform headers
 │     ├── RTR/  # API-Agnostic
 │     │  ├── Core/ 
 │     │  │  ├── Application.cpp
@@ -95,13 +101,13 @@ RTR-Engine/
 │        └── Desktop/
 │           └── GLFWWindow.h/cpp
 │
-├── Sandbox/  # Executable
+├── Sandbox/  # Simple Executable
 │  ├── CMakeLists.txt
 │  └── src/
 │    ├── SandboxApp.cpp
 │    └── layers/
 │
-├── vendor/  # Thrid-party source (imgui, stb, glad)
+├── vendor/  # Thrid-party sources (imgui, stb, glad)
 │  ├── CMakeLists.txt  # Manages vendor directories
 │  ├── glad/
 │  │  ├── include/
@@ -110,7 +116,7 @@ RTR-Engine/
 │  └── stb/
 │     └── stb_image.h/cpp
 │
-└── assets/ 
+└── assets/ # To be moved. Dont want global assets
    ├── shaders/
    │  ├── OpenGl/  # GLSL
    │  │  └── .gitkeep
@@ -129,7 +135,7 @@ RTR-Engine/
 * RTR/src/Platform/ implements the interfaces and uses glad, glfw, stb
 * RTR/src/Platform/ can only reach RTR/src/RTR in RendererAPI.cpp for the rendering API or Window.cpp
 
-### Naming Convention im trying to follow:  
+## Naming Convention im trying to follow:  
 Allman brace style  
 
 Everything is PascalCase, except:  
@@ -149,3 +155,11 @@ v_   varying
 a_   attribute  
 o_   output  
 r_   resource  
+
+## Note to self:
+* later, make RTR-Editor, split the root assests into engine and editor specific assets.
+* add yaml-cpp into vcpkg
+* Test framework (Catch2?)
+
+
+Windows 11 x64 | MSVS | C++23 | Opengl 4.6 | GLFW | GLM | Glad 2 | imGui | GLTF | spdlog | enTT | tinygltf |
