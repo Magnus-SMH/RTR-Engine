@@ -20,7 +20,7 @@ RTR-Engine/
 │
 ├── RTR/  # Static library
 │  ├── CMakeLists.txt
-│  ├── include/  # Public headers only — exposed to Sandbox via RTR.h
+│  ├── include/
 │  │  └── RTR/
 │  │     ├── RTR.h  # Public API gateway
 │  │     ├── Core/
@@ -55,7 +55,7 @@ RTR-Engine/
 │  │     │  └── TextureLoader.h
 │  │     └── ImGui/
 │  │        └── ImGuiLayer.h
-│  └── src/  # Private .cpp files + platform headers
+│  └── src/
 │     ├── RTR/  # API-Agnostic
 │     │  ├── Core/ 
 │     │  │  ├── Application.cpp
@@ -107,11 +107,9 @@ RTR-Engine/
 │    ├── SandboxApp.cpp
 │    └── layers/
 │
-├── vendor/  # Thrid-party sources (imgui, stb, glad)
-│  ├── CMakeLists.txt  # Manages vendor directories
+├── vendor/  # Thrid-party sources
+│  ├── CMakeLists.txt
 │  ├── glad/
-│  │  ├── include/
-│  │  └── src/
 │  ├── imgui/
 │  └── stb/
 │     └── stb_image.h/cpp
@@ -133,13 +131,6 @@ RTR-Engine/
 cd out/build/x64-debug; cmake --graphviz=../../../docs/deps.dot .; dot -Tsvg ../../../docs/deps.dot -o ../../../docs/architecture.svg
 ```
 ![Architecture](docs/architecture.svg)
-
-### Structure Ideas/goals:
-
-* Sandbox uses RTR/include/RTR/RTR.h as public inferface
-* RTR/src/RTR/ has api-agnostic logic, defines interfaces and uses: glm, spdlog
-* RTR/src/Platform/ implements the interfaces and uses glad, glfw, stb
-* RTR/src/Platform/ can only reach RTR/src/RTR in RendererAPI.cpp for the rendering API or Window.cpp
 
 ## Naming Convention im trying to follow:  
 Allman brace style  
@@ -165,7 +156,7 @@ r_   resource
 ## Note to self:
 * later, make RTR-Editor, split the root assests into engine and editor specific assets.
 * add yaml-cpp into vcpkg
-* Test framework (Catch2?)
+* Test framework (Catch2?) (headless exe that link to the specific libraries)
 
 
 Windows 11 x64 | MSVS | C++23 | Opengl 4.6 | GLFW | GLM | Glad 2 | imGui | GLTF | spdlog | enTT | tinygltf |
