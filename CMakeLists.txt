@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(RTR-Engine CXX)
+project(RTR-Engine CXX C)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -39,3 +39,7 @@ add_subdirectory(vendor)
 add_subdirectory(RTR)
 add_subdirectory(Sandbox)
 add_subdirectory(Headless)
+
+
+
+# C:/vcpkg/vcpkg.exe x-update-baseline --add-initial-baseline for updating vcpkg baseline
