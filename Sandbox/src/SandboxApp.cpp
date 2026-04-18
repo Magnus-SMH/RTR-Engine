@@ -6,7 +6,7 @@ public:
 	explicit Sandbox(const RTR::ApplicationSpecification& spec)
 		: RTR::Application(spec)
 	{
-		RTR_CRITICAL("Sandbox created!");
+		RTR_INFO("Sandbox created!");
 	}
 
 	~Sandbox()
@@ -15,11 +15,15 @@ public:
 
 };
 
-RTR::Application* RTR::CreateApplication(RTR::ApplicationCommandLineArgs args)
+std::unique_ptr<RTR::Application> CreateApplication(RTR::ApplicationCommandLineArgs args)
 {
 	RTR::ApplicationSpecification spec;
 	spec.Name = "Sandbox";
 	spec.WorkingDirectory = "../Sandbox";
 	spec.CommandLineArgs = args;
-	return new Sandbox(spec);
+	spec.Window.Width = 1280;
+	spec.Window.Height = 720;
+	spec.Window.VSync = true;
+
+	return std::make_unique<Sandbox>(spec);
 }

@@ -1,15 +1,18 @@
-add_executable(Sandbox
-
-src/SandboxApp.cpp
-
-#src/layers/.cpp
-)
-
-if (MSVC)
-    target_compile_options(Sandbox PRIVATE /utf-8)
+if(RTR_HEADLESS)
+    return()
 endif()
 
-target_link_libraries(Sandbox PRIVATE rtr_engine)
+add_executable(Sandbox
+    src/SandboxApp.cpp
+    src/main.cpp
+)
+
+target_compile_options(Sandbox PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+)
+
+target_link_libraries(Sandbox PRIVATE rtr_engine_full)
 
 target_compile_features(Sandbox PRIVATE cxx_std_23)
 

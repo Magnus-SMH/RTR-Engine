@@ -1,22 +1,28 @@
-find_package(spdlog CONFIG REQUIRED)
-find_package(EnTT CONFIG REQUIRED)
+add_library(rtr_assets_common STATIC
+    src/RTR/Assets/AssetManager.cpp
+    src/RTR/Assets/MeshLoader.cpp
 
-set(RTR_ASSETS_SOURCES
-src/RTR/Assets/AssetManager.cpp
-src/RTR/Assets/MeshLoader.cpp
-src/RTR/Assets/TextureLoader.cpp
 )
-add_library(rtr_assets STATIC ${RTR_ASSETS_SOURCES})
-target_link_libraries(rtr_assets
+target_link_libraries(rtr_assets_common
     PUBLIC rtr_core
-    PRIVATE stb
 )
-target_include_directories(rtr_assets
+target_include_directories(rtr_assets_common
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 
+add_library(rtr_assets_client STATIC
+    src/RTR/Assets/TextureLoader.cpp
+)
+target_link_libraries(rtr_assets_client
+    PUBLIC rtr_assets_common
+    PRIVATE stb
+)
+target_include_directories(rtr_assets_client
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 
 set(RTR_CORE_SOURCES
@@ -25,9 +31,11 @@ src/RTR/Core/LayerStack.cpp
 src/RTR/Core/Log.cpp
 src/RTR/Core/UUID.cpp
 src/RTR/Core/Application.cpp
-src/RTR/Core/Window.cpp
 )
 add_library(rtr_core STATIC ${RTR_CORE_SOURCES})
+if(NOT RTR_HEADLESS)
+    target_sources(rtr_core PRIVATE src/RTR/Core/Window.cpp)
+endif()
 
 target_link_libraries(rtr_core
     PUBLIC spdlog::spdlog
@@ -45,7 +53,7 @@ add_library(rtr_imgui STATIC ${RTR_IMGUI_SOURCES})
 
 target_link_libraries(rtr_imgui
     PUBLIC rtr_core
-    PUBLIC imgui
+    PRIVATE imgui
     PRIVATE rtr_imgui_backend
 )
 target_include_directories(rtr_imgui PUBLIC
@@ -105,31 +113,51 @@ src/Platform/OpenGL/OpenGLDebug.cpp
 src/Platform/OpenGL/OpenGLFramebuffer.cpp
 src/Platform/OpenGL/OpenGLRendererAPI.cpp
 src/Platform/OpenGL/OpenGLShader.cpp
-src/Platform/Desktop/GLFWWindow.cpp
 )
 add_library(rtr_platform STATIC
     ${RTR_PLATFORM_SOURCES}
 )
+if(RTR_HEADLESS)
+target_sources(rtr_platform PRIVATE
+    src/Platform/Headless/HeadlessPlatform.cpp
+)
+target_compile_definitions(rtr_platform PUBLIC RTR_HEADLESS)
+else()
+target_sources(rtr_platform PRIVATE
+    src/Platform/Desktop/DesktopPlatform.cpp
+    src/Platform/Desktop/GLFWWindow.cpp
+)
+endif()
 target_link_libraries(rtr_platform
     PRIVATE glfw
     PRIVATE glad
+    PRIVATE rtr_core
 )
 target_include_directories(rtr_platform PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Platform
+    $<TARGET_PROPERTY:glfw,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 
-add_library(rtr_engine INTERFACE)
+add_library(rtr_engine_core INTERFACE)
 
-target_include_directories(rtr_engine INTERFACE
+target_include_directories(rtr_engine_core INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(rtr_engine INTERFACE
+target_link_libraries(rtr_engine_core INTERFACE
     rtr_core
-    rtr_renderer
     rtr_scene
-    rtr_assets
+    rtr_assets_common
+    rtr_platform
+)
+
+add_library(rtr_engine_full INTERFACE)
+
+target_link_libraries(rtr_engine_full INTERFACE
+    rtr_engine_core
+    rtr_assets_client
+    rtr_renderer
     rtr_imgui
 )
