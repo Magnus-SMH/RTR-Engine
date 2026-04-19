@@ -22,7 +22,7 @@ namespace RTR
 
 		if (!m_Spec.WorkingDirectory.empty())
 		{
-			std::filesystem::path workDir(m_Spec.WorkingDirectory);
+			std::filesystem::path workDir = std::filesystem::absolute(m_Spec.WorkingDirectory);
 
 			if (std::filesystem::exists(workDir))
 				std::filesystem::current_path(workDir);

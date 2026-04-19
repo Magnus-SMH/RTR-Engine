@@ -5,8 +5,7 @@ Real-Time 3D Only Renderer Engine/Sandbox
 > To compile and run the program you need to download Ninja, vcpkg (and set the env variable VCPKG_ROOT), Git,
 > CMake and C/C++ compiler.  
 > 
-> To run in Engine-Debug mode:  
-> * Customize the CMakePresets for your system.  
+> To run the Engine-Debug preset:  
 > ```bash
 > cmake --preset Engine-Debug
 > cmake --build --preset build-debug
@@ -16,9 +15,6 @@ Real-Time 3D Only Renderer Engine/Sandbox
 >  [!WARNING]
 > Currently only supports OpenGL 4.6.
 > Older hardware and macOS does not support 4.6 in Client mode, however it should work in a headless configuration, as a server if needed.
-> CMakePresets currently setup for Windows only, but should work for linux and mac with some modification
-> Removing "CMAKE_SYSTEM_VERSION" adding you local CXX and C compiler and defining you arcitecture value should do it.
-> Not ideal ik
 
 Inspiration from:  
 * [TheCherno](https://www.youtube.com/@TheCherno):

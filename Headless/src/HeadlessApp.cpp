@@ -19,7 +19,7 @@ std::unique_ptr<RTR::Application> CreateApplication(RTR::ApplicationCommandLineA
 {
 	RTR::ApplicationSpecification spec;
 	spec.Name = "Headless";
-	spec.WorkingDirectory = "../Headless";
+	spec.WorkingDirectory = ".";
 	spec.CommandLineArgs = args;
 
 	return std::make_unique<Headless>(spec);
