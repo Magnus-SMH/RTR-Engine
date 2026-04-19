@@ -168,7 +168,7 @@ $preset = "Engine-Debug"
 cmake -S . -B out/build/$preset --graphviz=out/build/$preset/deps.dot
 dot -Tsvg out/build/$preset/deps.dot -o docs/architecture-$preset.svg
 ```
-![Architecture](docs/architecture.svg)
+![Architecture](docs/architecture-Engine-Debug.svg)
 
 ## Naming Convention im trying to follow:  
 Allman brace style  
