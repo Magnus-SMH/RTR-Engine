@@ -1,6 +1,25 @@
 # RTR-Engine
 Real-Time 3D Only Renderer Engine/Sandbox
 
+> [!NOTE]
+> To compile and run the program you need to download Ninja, vcpkg (and set the env variable VCPKG_ROOT), Git,
+> CMake and C/C++ compiler.  
+> 
+> To run in Engine-Debug mode:  
+> * Customize the CMakePresets for your system.  
+> ```bash
+> cmake --preset Engine-Debug
+> cmake --build --preset build-debug
+> ./out/build/Engine-Debug/Sandbox/Sandbox
+> ```
+
+>  [!WARNING]
+> Currently only supports OpenGL 4.6.
+> Older hardware and macOS does not support 4.6 in Client mode, however it should work in a headless configuration, as a server if needed.
+> CMakePresets currently setup for Windows only, but should work for linux and mac with some modification
+> Removing "CMAKE_SYSTEM_VERSION" adding you local CXX and C compiler and defining you arcitecture value should do it.
+> Not ideal ik
+
 Inspiration from:  
 * [TheCherno](https://www.youtube.com/@TheCherno):
 * Game Engine series [(YT-Playlist)](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT)   -   [Github: Hazel](https://github.com/TheCherno/Hazel) 
@@ -142,9 +161,7 @@ local var and function params is camelCase
 # Prefixes:  
 m_   member var  
 s_   static var  
-k_   constant  
-g_   global var  
-T    emplate type param  
+T    template type param  
 
 # Shader var:  
 u_   uniform  
@@ -157,6 +174,3 @@ r_   resource
 * later, make RTR-Editor, split the root assests into engine and editor specific assets.
 * add yaml-cpp into vcpkg
 * Test framework (Catch2?) (headless exe that link to the specific libraries)
-
-
-Windows 11 x64 | MSVS | C++23 | Opengl 4.6 | GLFW | GLM | Glad 2 | imGui | GLTF | spdlog | enTT | tinygltf |
