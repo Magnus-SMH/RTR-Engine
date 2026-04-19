@@ -26,6 +26,11 @@ if (RTR_BUILD_MODE STREQUAL "DIST")
 	if(result)
 		set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 	endif()
+	if(NOT RTR_HEADLESS)
+		set(RTR_WIN32_FLAG "WIN32")
+	else()
+		set(RTR_WIN32_FLAG "")
+	endif()
 elseif(RTR_BUILD_MODE STREQUAL "DEV")
 	add_compile_definitions(RTR_ENABLE_LOGGING)
 	add_compile_definitions(SPDLOG_ACTIVE_LEVEL=3) #warn
@@ -42,4 +47,4 @@ add_subdirectory(Headless)
 
 
 
-# C:/vcpkg/vcpkg.exe x-update-baseline --add-initial-baseline for updating vcpkg baseline
+# C:/vcpkg/vcpkg.exe x-update-baseline --add-initial-baseline     for updating vcpkg's builtin-baseline

@@ -16,6 +16,8 @@ namespace RTR
 
 		uint32_t GetWidth() const override { return m_Data.Width; }
 		uint32_t GetHeight() const override { return m_Data.Height; }
+		int32_t GetPosX() const override { return m_Data.PosX; }
+		int32_t GetPosY() const override { return m_Data.PosY; }
 
 		void SetEventCallback(EventCallbackFn EventCallback) override { m_Data.EventCallback = std::move(EventCallback); }
 
@@ -35,6 +37,8 @@ namespace RTR
 			std::string Title;
 			uint32_t Width = 0;
 			uint32_t Height = 0;
+			int32_t PosX = 0;
+			int32_t PosY = 0;
 			bool VSync = true;
 			EventCallbackFn EventCallback;
 		};

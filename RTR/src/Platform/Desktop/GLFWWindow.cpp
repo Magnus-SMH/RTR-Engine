@@ -1,10 +1,5 @@
 #include "Platform/Desktop/GLFWWindow.h"
 
-#include <stdexcept>
-
-#include "RTR/Core/Log.h"
-#include "RTR/Core/Platform.h"
-
 namespace RTR
 {
 	static uint8_t s_GLFWWindowCount = 0;
@@ -30,6 +25,8 @@ namespace RTR
 		m_Data.Title = spec.Title;
 		m_Data.Width = spec.Width;
 		m_Data.Height = spec.Height;
+		m_Data.PosX = spec.PosX;
+		m_Data.PosY = spec.PosY;
 
 		if (s_GLFWWindowCount == 0)
 		{
@@ -87,6 +84,19 @@ namespace RTR
 
 	void GLFWWindow::RegisterCallbacks()
 	{
+		glfwSetWindowPosCallback(m_Window,
+			[](GLFWwindow* window, int xpos, int ypos)
+			{
+				RTR_CORE_TRACE("GLFWWindow Move callback! x={} y={}", xpos, ypos);
+
+				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+				data.PosX = xpos;
+				data.PosY = ypos;
+
+				Event e = WindowMovedEvent{ xpos, ypos };
+				data.EventCallback(e);
+			});
+
 		glfwSetWindowSizeCallback(m_Window,
 			[](GLFWwindow* window, int width, int height)
 			{

@@ -1,8 +1,5 @@
 #include "RTR/Core/LayerStack.h"
 
-#include <algorithm>
-#include <memory>
-
 namespace RTR
 {
 	void LayerStack::PushLayer(std::unique_ptr<Layer> layer)

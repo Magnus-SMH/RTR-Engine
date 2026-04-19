@@ -56,8 +56,9 @@ namespace RTR
 	private:
 		void OnEvent(Event& event);
 
-		bool OnWindowClose(WindowCloseEvent& e);
-		bool OnWindowResize(WindowResizeEvent& e);
+		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
+		bool OnWindowMoved(WindowMovedEvent& event);
 
 		ApplicationSpecification m_Spec;
 #ifndef RTR_HEADLESS

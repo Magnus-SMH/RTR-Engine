@@ -11,6 +11,7 @@ namespace RTR
 	using KeyCode = uint16_t;
 	using MouseCode = uint8_t;
 
+	struct WindowMovedEvent { int32_t X, Y; };
 	struct WindowCloseEvent {};
 	struct WindowResizeEvent { uint32_t Width, Height; };
 	struct WindowFocusEvent { bool Focused; };
@@ -25,6 +26,7 @@ namespace RTR
 	struct MouseButtonReleasedEvent { MouseCode Button; };
 
 	using Event = std::variant <
+		WindowMovedEvent,
 		WindowCloseEvent,
 		WindowResizeEvent,
 		WindowFocusEvent,

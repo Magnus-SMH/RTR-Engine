@@ -20,6 +20,8 @@ namespace RTR
 		std::string Title = "RTR Engine";
 		uint32_t Width = 1280;
 		uint32_t Height = 720;
+		uint32_t PosX = 0;
+		uint32_t PosY = 0;
 		bool VSync = true;
 	};
 
@@ -34,6 +36,8 @@ namespace RTR
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
+		virtual int32_t GetPosX() const = 0;
+		virtual int32_t GetPosY() const = 0;
 
 		virtual void SetEventCallback(EventCallbackFn callback) = 0;
 

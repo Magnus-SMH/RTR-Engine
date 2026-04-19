@@ -1,22 +1,29 @@
 #include "RTR/Core/Application.h"
 
-#include <iostream>
-#include <filesystem>
-#include <chrono>
-#include <thread>
-
-#include "RTR/Core/Log.h"
-#include "RTR/Core/Platform.h"
-
 namespace RTR
 {
 	Application* Application::s_Instance = nullptr;
+	static RTR::Application* s_AppInstance = nullptr;
+
+	void SignalHandler(int signal)
+	{
+		if (signal == SIGINT || signal == SIGTERM)
+		{
+			RTR_CORE_WARN("Signal {0} received. Shutting down...", signal);
+			if (s_AppInstance)
+				s_AppInstance->Close();
+		}
+	}
 
 	Application::Application(const ApplicationSpecification& spec)
 		: m_Spec(spec)
 	{
 		RTR_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
+		s_AppInstance = this;
+
+		std::signal(SIGINT, SignalHandler);
+		std::signal(SIGTERM, SignalHandler);
 
 		RTR_CORE_INFO("Application name: {0}", m_Spec.Name);
 
@@ -81,7 +88,7 @@ namespace RTR
 
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent&)
+	bool Application::OnWindowClose(WindowCloseEvent& event)
 	{
 		RTR_CORE_INFO("WindowCloseEvent received! Shutting down.");
 		m_Running = false;

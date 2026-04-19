@@ -2,8 +2,6 @@
 
 #ifdef RTR_ENABLE_LOGGING
 
-#include "spdlog/sinks/stdout_color_sinks.h"
-
 namespace RTR
 {
 	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
