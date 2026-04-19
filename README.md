@@ -194,3 +194,4 @@ r_   resource
 * later, make RTR-Editor, split the root assests into engine and editor specific assets.
 * add yaml-cpp into vcpkg
 * Test framework (Catch2?) (headless exe that link to the specific libraries)
+* rtr_assets_server not common
