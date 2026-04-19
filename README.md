@@ -29,98 +29,118 @@ mostly empty placeholder files to plan the structure and to implement CMake and 
 ```bash
 RTR-Engine/
 ├── CMakeLists.txt
+├── CMakePresets.json
 ├── vcpkg.json
 ├── README.md
+├── LICENSE
 ├── .gitignore
 │
 ├── RTR/  # Static library
 │  ├── CMakeLists.txt
 │  ├── include/
 │  │  └── RTR/
-│  │     ├── RTR.h  # Public API gateway
-│  │     ├── Core/
-│  │     │  ├── Application.h
-│  │     │  ├── EntryPoint.h
-│  │     │  ├── Window.h
-│  │     │  ├── LayerStack.h
-│  │     │  ├── Layer.h
-│  │     │  ├── Input.h
-│  │     │  ├── Log.h
-│  │     │  └── UUID.h
-│  │     ├── Renderer/
-│  │     │  ├── Renderer.h
-│  │     │  ├── RenderCommand.h
-│  │     │  ├── RendererAPI.h
-│  │     │  ├── Shader.h
-│  │     │  ├── Buffer.h
-│  │     │  ├── VertexArray.h
-│  │     │  ├── Texture.h
-│  │     │  ├── Framebuffer.h
-│  │     │  ├── Mesh.h
-│  │     │  ├── Material.h
-│  │     │  ├── Renderer3D.h
-│  │     │  └── Camera.h
-│  │     ├── Scene/
-│  │     │  ├── Scene.h
-│  │     │  ├── Entity.h
-│  │     │  └── Components.h
 │  │     ├── Assets/
 │  │     │  ├── AssetManager.h
 │  │     │  ├── MeshLoader.h
 │  │     │  └── TextureLoader.h
-│  │     └── ImGui/
-│  │        └── ImGuiLayer.h
+│  │     ├── Core/
+│  │     │  ├── Application.h
+│  │     │  ├── Base.h
+│  │     │  ├── EntryPoint.h
+│  │     │  ├── Events.h
+│  │     │  ├── Input.h
+│  │     │  ├── Layer.h
+│  │     │  ├── LayerStack.h
+│  │     │  ├── Log.h
+│  │     │  ├── Platform.h
+│  │     │  ├── UUID.h
+│  │     │  └── Window.h
+│  │     ├── ImGui/
+│  │     │  └── ImGuiLayer.h
+│  │     ├── Renderer/
+│  │     │  ├── Buffer.h
+│  │     │  ├── Camera.h
+│  │     │  ├── Framebuffer.h
+│  │     │  ├── Material.h
+│  │     │  ├── Mesh.h
+│  │     │  ├── RenderCommand.h
+│  │     │  ├── Renderer.h
+│  │     │  ├── RendererAPI.h
+│  │     │  ├── Renderer3D.h
+│  │     │  ├── Shader.h
+│  │     │  ├── Texture.h
+│  │     │  └── VertexArray.h
+│  │     ├── Scene/
+│  │     │  ├── Components.h
+│  │     │  ├── Entity.h
+│  │     │  └── Scene.h
+│  │     └── RTR.h  # Public API gateway
+│  │
 │  └── src/
-│     ├── RTR/  # API-Agnostic
-│     │  ├── Core/ 
-│     │  │  ├── Application.cpp
-│     │  │  ├── LayerStack.cpp
-│     │  │  ├── Log.cpp
-│     │  │  ├── Layer.cpp
-│     │  │  ├── UUID.cpp
-│     │  │  └── Window.cpp
-│     │  ├── Renderer/  
-│     │  │  ├── Renderer.cpp
-│     │  │  ├── RendererAPI.cpp
-│     │  │  ├── RenderCommand.cpp
-│     │  │  ├── Shader.cpp
-│     │  │  ├── Buffer.cpp
-│     │  │  ├── VertexArray.cpp
-│     │  │  ├── Texture.cpp
-│     │  │  ├── Framebuffer.cpp
-│     │  │  ├── Mesh.cpp
-│     │  │  ├── Material.cpp
-│     │  │  ├── Renderer3D.cpp
-│     │  │  └── Camera.cpp
-│     │  ├── Scene/   
-│     │  │  ├── Scene.cpp
-│     │  │  └── Entity.cpp
+│     ├── Platform/
+│     │  ├── Desktop/
+│     │  │  ├── DesktopPlatform.cpp
+│     │  │  └── OpenGLContext.h/cpp
+│     │  ├── Headless/
+│     │  │  └── HeadlessPlatform.cpp
+│     │  ├── OpenGL/ 
+│     │  │  ├── OpenGLBuffer.h/cpp
+│     │  │  ├── OpenGLContext.h/cpp
+│     │  │  ├── OpenGLDebug.h/cpp
+│     │  │  ├── OpenGLFramebuffer.h/cpp
+│     │  │  ├── OpenGLRendererAPI.h/cpp
+│     │  │  ├── OpenGLShader.h/cpp
+│     │  │  ├── OpenGLTexture.h/cpp
+│     │  │  └── OpenGLVertexArray.h/cpp
+│     │  └── Vulkan/
+│     │     └── .gitkeep
+│     │
+│     ├── RTR/  # goal: API-Agnostic
 │     │  ├── Assets/   
 │     │  │  ├── AssetManager.cpp
 │     │  │  ├── MeshLoader.cpp
 │     │  │  └── TextureLoader.cpp
-│     │  └── ImGui/
-│     │     └── ImGuiLayer.cpp
-│     └── Platform/
-│        ├── OpenGL/ 
-│        │  ├── OpenGLContext.h/cpp
-│        │  ├── OpenGLRendererAPI.h/cpp
-│        │  ├── OpenGLShader.h/cpp
-│        │  ├── OpenGLBuffer.h/cpp
-│        │  ├── OpenGLVertexArray.h/cpp
-│        │  ├── OpenGLTexture.h/cpp
-│        │  ├── OpenGLFramebuffer.h/cpp
-│        │  └── OpenGLDebug.h/cpp
-│        ├── Vulkan/
-│        │  └── .gitkeep
-│        └── Desktop/
-│           └── GLFWWindow.h/cpp
+│     │  ├── Core/ 
+│     │  │  ├── Application.cpp
+│     │  │  ├── Layer.cpp
+│     │  │  ├── LayerStack.cpp
+│     │  │  ├── Log.cpp
+│     │  │  ├── UUID.cpp
+│     │  │  └── Window.cpp
+│     │  ├── ImGui/
+│     │  │  └── ImGuiLayer.cpp
+│     │  ├── Renderer/  
+│     │  │  ├── Buffer.cpp
+│     │  │  ├── Camera.cpp
+│     │  │  ├── Framebuffer.cpp
+│     │  │  ├── Material.cpp
+│     │  │  ├── Mesh.cpp
+│     │  │  ├── RenderCommand.cpp
+│     │  │  ├── Renderer.cpp
+│     │  │  ├── RendererAPI.cpp
+│     │  │  ├── Renderer3D.cpp
+│     │  │  ├── Shader.cpp
+│     │  │  ├── Texture.cpp
+│     │  │  └── VertexArray.cpp
+│     │  └── Scene/   
+│     │     ├── Entity.cpp
+│     │     └── Scene.cpp
+│     │  
+│     └── CMakeLists.txt
 │
 ├── Sandbox/  # Simple Executable
-│  ├── CMakeLists.txt
-│  └── src/
-│    ├── SandboxApp.cpp
-│    └── layers/
+│  ├──src/
+│  │  ├── layers/
+│  │  ├── main.cpp
+│  │  └── SandboxApp.cpp
+│  └── CMakeLists.txt
+│
+├── Headless/  # Simple Executable
+│  ├──src/
+│  │  ├── layers/
+│  │  ├── main.cpp
+│  │  └── HeadlessApp.cpp
+│  └── CMakeLists.txt
 │
 ├── vendor/  # Thrid-party sources
 │  ├── CMakeLists.txt
