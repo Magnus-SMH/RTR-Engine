@@ -126,7 +126,7 @@ RTR-Engine/
 │     │     ├── Entity.cpp
 │     │     └── Scene.cpp
 │     │  
-│     └── CMakeLists.txt
+│     └── RTRPCH.h  # Precompiled Headers (CORE)
 │
 ├── Sandbox/  # Simple Executable
 │  ├──src/
