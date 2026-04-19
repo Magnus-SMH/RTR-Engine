@@ -163,7 +163,10 @@ RTR-Engine/
 
 ### Graphviz command:
 ```NOTE
-cd out/build/x64-debug; cmake --graphviz=../../../docs/deps.dot .; dot -Tsvg ../../../docs/deps.dot -o ../../../docs/architecture.svg
+Using developer Powershell:
+$preset = "Engine-Debug"
+cmake -S . -B out/build/$preset --graphviz=out/build/$preset/deps.dot
+dot -Tsvg out/build/$preset/deps.dot -o docs/architecture-$preset.svg
 ```
 ![Architecture](docs/architecture.svg)
 
