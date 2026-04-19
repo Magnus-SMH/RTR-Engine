@@ -26,8 +26,5 @@
 		} \
 	} while (0)
 #else
-	#define RTR_CORE_ASSERT(check, ...) \
-    do { \
-        if (!(check)) { std::abort(); } \
-    } while (0)
+	#define RTR_CORE_ASSERT(check, ...) ((void)0)
 #endif
