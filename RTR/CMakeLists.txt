@@ -1,3 +1,27 @@
+
+set(RTR_CORE_SOURCES
+    src/RTR/Core/Layer.cpp
+    src/RTR/Core/LayerStack.cpp
+    src/RTR/Core/Log.cpp
+    src/RTR/Core/UUID.cpp
+    src/RTR/Core/Application.cpp
+)
+add_library(rtr_core STATIC ${RTR_CORE_SOURCES})
+if(NOT RTR_HEADLESS)
+    target_sources(rtr_core PRIVATE src/RTR/Core/Window.cpp)
+endif()
+
+target_link_libraries(rtr_core
+    PUBLIC spdlog::spdlog
+)
+target_precompile_headers(rtr_core PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTRPCH.h"
+)
+target_include_directories(rtr_core PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+
 add_library(rtr_assets_common STATIC
     src/RTR/Assets/AssetManager.cpp
     src/RTR/Assets/MeshLoader.cpp
@@ -25,30 +49,6 @@ target_include_directories(rtr_assets_client
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-
-set(RTR_CORE_SOURCES
-    src/RTR/Core/Layer.cpp
-    src/RTR/Core/LayerStack.cpp
-    src/RTR/Core/Log.cpp
-    src/RTR/Core/UUID.cpp
-    src/RTR/Core/Application.cpp
-)
-add_library(rtr_core STATIC ${RTR_CORE_SOURCES})
-if(NOT RTR_HEADLESS)
-    target_sources(rtr_core PRIVATE src/RTR/Core/Window.cpp)
-endif()
-
-target_link_libraries(rtr_core
-    PUBLIC spdlog::spdlog
-)
-target_precompile_headers(rtr_core PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTRPCH.h"
-)
-target_include_directories(rtr_core PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
 
 
 set(RTR_IMGUI_SOURCES
@@ -117,6 +117,25 @@ target_include_directories(rtr_scene PUBLIC
 
 
 
+set(RTR_SERVER_SOURCES
+    src/RTR/Server/GameWorld.cpp
+    src/RTR/Server/ServerLayer.cpp
+    src/RTR/Server/TickClock.cpp
+)
+add_library(rtr_server STATIC
+    ${RTR_SERVER_SOURCES}
+)
+target_include_directories(rtr_server
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(rtr_server
+    PUBLIC rtr_core
+    PUBLIC rtr_scene
+)
+target_precompile_headers(rtr_server REUSE_FROM rtr_core)
+
+
 set(RTR_PLATFORM_SOURCES
     src/Platform/OpenGL/OpenGLTexture.cpp
     src/Platform/OpenGL/OpenGLVertexArray.cpp
@@ -168,6 +187,7 @@ target_link_libraries(rtr_engine_core INTERFACE
     rtr_scene
     rtr_assets_common
     rtr_platform
+    rtr_server
 )
 
 add_library(rtr_engine_full INTERFACE)
