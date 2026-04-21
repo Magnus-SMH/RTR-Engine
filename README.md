@@ -169,6 +169,7 @@ cmake -S . -B out/build/$preset --graphviz=out/build/$preset/deps.dot
 dot -Tsvg out/build/$preset/deps.dot -o docs/architecture-$preset.svg
 ```
 ![Architecture](docs/architecture-Engine-Debug.svg)
+![Architecture](docs/architecture-Server-Debug.svg)
 
 ## Naming Convention im trying to follow:  
 Allman brace style  
@@ -193,3 +194,4 @@ r_   resource
 * later, make RTR-Editor, split the root assests into engine and editor specific assets.
 * add yaml-cpp into vcpkg
 * Test framework (Catch2?) (headless exe that link to the specific libraries)
+* rtr_assets_server not common
