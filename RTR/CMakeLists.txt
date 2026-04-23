@@ -16,22 +16,23 @@ target_link_libraries(rtr_core
 )
 target_precompile_headers(rtr_core PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTRPCH.h"
+    <glm/glm.hpp>
 )
 target_include_directories(rtr_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 
-add_library(rtr_assets_common STATIC
+add_library(rtr_assets_core STATIC
     src/RTR/Assets/AssetManager.cpp
     src/RTR/Assets/MeshLoader.cpp
 
 )
-target_link_libraries(rtr_assets_common
+target_link_libraries(rtr_assets_core
     PUBLIC rtr_core
 )
-target_precompile_headers(rtr_assets_common REUSE_FROM rtr_core)
-target_include_directories(rtr_assets_common
+target_precompile_headers(rtr_assets_core REUSE_FROM rtr_core)
+target_include_directories(rtr_assets_core
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
@@ -41,7 +42,7 @@ add_library(rtr_assets_client STATIC
     src/RTR/Assets/TextureLoader.cpp
 )
 target_link_libraries(rtr_assets_client
-    PUBLIC rtr_assets_common
+    PUBLIC rtr_assets_core
     PRIVATE stb
 )
 target_precompile_headers(rtr_assets_client REUSE_FROM rtr_core)
@@ -58,7 +59,7 @@ add_library(rtr_imgui STATIC ${RTR_IMGUI_SOURCES})
 
 target_link_libraries(rtr_imgui
     PUBLIC rtr_core
-    PRIVATE imgui
+    PUBLIC imgui
     PRIVATE rtr_imgui_backend
 )
 target_precompile_headers(rtr_imgui REUSE_FROM rtr_core)
@@ -74,7 +75,6 @@ set(RTR_RENDERER_SOURCES
     src/RTR/Renderer/Framebuffer.cpp
     src/RTR/Renderer/Material.cpp
     src/RTR/Renderer/Mesh.cpp
-    src/RTR/Renderer/RendererAPI.cpp
     src/RTR/Renderer/RenderCommand.cpp
     src/RTR/Renderer/Renderer.cpp
     src/RTR/Renderer/Renderer3D.cpp
@@ -87,7 +87,6 @@ add_library(rtr_renderer STATIC ${RTR_RENDERER_SOURCES})
 target_link_libraries(rtr_renderer
     PUBLIC rtr_core
     PUBLIC glm::glm
-    PRIVATE rtr_platform
 )
 target_precompile_headers(rtr_renderer PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTRPCH.h"
@@ -143,36 +142,41 @@ set(RTR_PLATFORM_SOURCES
     src/Platform/OpenGL/OpenGLContext.cpp
     src/Platform/OpenGL/OpenGLDebug.cpp
     src/Platform/OpenGL/OpenGLFramebuffer.cpp
-    src/Platform/OpenGL/OpenGLRendererAPI.cpp
     src/Platform/OpenGL/OpenGLShader.cpp
 )
 add_library(rtr_platform STATIC
     ${RTR_PLATFORM_SOURCES}
 )
 if(RTR_HEADLESS)
-target_sources(rtr_platform PRIVATE
-    src/Platform/Headless/HeadlessPlatform.cpp
-)
-target_compile_definitions(rtr_platform PUBLIC RTR_HEADLESS)
+    target_sources(rtr_platform PRIVATE
+        src/Platform/Headless/HeadlessPlatform.cpp
+    )
+    target_compile_definitions(rtr_platform PUBLIC RTR_HEADLESS)
 else()
-target_sources(rtr_platform PRIVATE
-    src/Platform/Desktop/DesktopPlatform.cpp
-    src/Platform/Desktop/GLFWWindow.cpp
-)
+    target_sources(rtr_platform PRIVATE
+        src/Platform/Desktop/DesktopPlatform.cpp
+        src/Platform/Desktop/GLFWWindow.cpp
+        src/Platform/OpenGL/OpenGLRendererAPI.cpp
+        src/RTR/Renderer/RendererAPI.cpp
+    )
 endif()
 target_link_libraries(rtr_platform
     PRIVATE glfw
     PRIVATE glad
-    PRIVATE rtr_core
+    PUBLIC glm::glm
+    PUBLIC rtr_core
 )
 target_precompile_headers(rtr_platform PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTRPCH.h"
     <glad/gl.h>
     <GLFW/glfw3.h>
+    <glm/glm.hpp>
 )
 target_include_directories(rtr_platform PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Platform
+    ${CMAKE_CURRENT_SOURCE_DIR}/include 
+    ${CMAKE_SOURCE_DIR}/vendor/imgui-docking
 )
 
 
@@ -185,7 +189,7 @@ target_include_directories(rtr_engine_core INTERFACE
 target_link_libraries(rtr_engine_core INTERFACE
     rtr_core
     rtr_scene
-    rtr_assets_common
+    rtr_assets_core
     rtr_platform
     rtr_server
 )

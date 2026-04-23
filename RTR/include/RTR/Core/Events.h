@@ -68,6 +68,21 @@ namespace RTR
 	{
 		Event& Event;
 		bool   Handled = false;
+
+		bool IsMouseEvent() const
+		{
+			return std::holds_alternative<MouseMovedEvent>(Event) ||
+				std::holds_alternative<MouseScrolledEvent>(Event) ||
+				std::holds_alternative<MouseButtonPressedEvent>(Event) ||
+				std::holds_alternative<MouseButtonReleasedEvent>(Event);
+		}
+
+		bool IsKeyEvent() const
+		{
+			return std::holds_alternative<KeyPressedEvent>(Event) ||
+				std::holds_alternative<KeyReleasedEvent>(Event) ||
+				std::holds_alternative<KeyTypedEvent>(Event);
+		}
 	};
 
 }

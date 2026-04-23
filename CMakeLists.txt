@@ -33,7 +33,7 @@ if (RTR_BUILD_MODE STREQUAL "DIST")
 	endif()
 elseif(RTR_BUILD_MODE STREQUAL "DEV")
 	add_compile_definitions(RTR_ENABLE_LOGGING)
-	add_compile_definitions(SPDLOG_ACTIVE_LEVEL=3) #warn
+	add_compile_definitions(SPDLOG_ACTIVE_LEVEL=2) #info
 elseif(RTR_BUILD_MODE STREQUAL "DEBUG")
 	add_compile_definitions(RTR_ENABLE_ASSERTS)
 	add_compile_definitions(RTR_ENABLE_LOGGING)

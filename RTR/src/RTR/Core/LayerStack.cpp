@@ -4,6 +4,7 @@ namespace RTR
 {
 	void LayerStack::PushLayer(std::unique_ptr<Layer> layer)
 	{
+		layer->OnAttach();
 		layer->SetState(LayerState::Attached);
 		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, std::move(layer));
 		m_LayerInsertIndex++;
@@ -11,6 +12,7 @@ namespace RTR
 
 	void LayerStack::PushOverlay(std::unique_ptr<Layer> overlay)
 	{
+		overlay->OnAttach();
 		overlay->SetState(LayerState::Attached);
 		m_Layers.emplace_back(std::move(overlay));
 	}

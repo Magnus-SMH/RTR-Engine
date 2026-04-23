@@ -1,4 +1,7 @@
 #include "Platform/Desktop/GLFWWindow.h"
+#include "RTR/Renderer/GraphicsContext.h"
+
+#include <backends/imgui_impl_glfw.h>
 
 namespace RTR
 {
@@ -34,20 +37,18 @@ namespace RTR
 			{
 				throw std::runtime_error("Failed to initialize GLFW!");
 			}
-			RTR_CORE_INFO("Initialized GLFW!");
+			RTR_CORE_INFO("Initialized GLFW");
 		}
 
-		//Todo: Remove Platform specific hints
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		RTR_CORE_ASSERT(m_Window, "Failed to create GLFW window!");
 
 		++s_GLFWWindowCount;
 
-		glfwMakeContextCurrent(m_Window);
+		m_Context = GraphicsContext::Create(m_Window);
+		m_Context->Init();
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(spec.VSync);
 		RegisterCallbacks();
@@ -62,15 +63,14 @@ namespace RTR
 		if (s_GLFWWindowCount == 0)
 		{
 			glfwTerminate();
-			RTR_CORE_WARN("Terminated GLFW!");
+			RTR_CORE_INFO("Terminated GLFW");
 		}
 	}
 
 	void GLFWWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		//Todo: Change to RendererAPI specific swap buffers:
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void GLFWWindow::SetVSync(bool enabled)
@@ -88,6 +88,8 @@ namespace RTR
 			[](GLFWwindow* window, int xpos, int ypos)
 			{
 				RTR_CORE_TRACE("GLFWWindow Move callback! x={} y={}", xpos, ypos);
+
+				if (xpos == -32000 || ypos == -32000) return;
 
 				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 				data.PosX = xpos;
@@ -111,14 +113,14 @@ namespace RTR
 			});
 
 		glfwSetWindowCloseCallback(m_Window,
-			[](GLFWwindow* window)
-			{
-				RTR_CORE_TRACE("GLFWWindow Close callback!");
+		[](GLFWwindow* window)
+		{
+			RTR_CORE_TRACE("GLFWWindow Close callback!");
 
-				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-				Event e = WindowCloseEvent{};
-				data.EventCallback(e);
-			});
+			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+			Event e = WindowCloseEvent{};
+			data.EventCallback(e);
+		});
 		glfwSetWindowFocusCallback(m_Window,
 			[](GLFWwindow* window, int focused)
 			{
@@ -130,93 +132,98 @@ namespace RTR
 			});
 
 		glfwSetKeyCallback(m_Window,
-			[](GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
+		[](GLFWwindow* window, int key, int scancode, int action, int mods)
+		{
+			ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+			RTR_CORE_TRACE("GLFWWindow Key callback! key={} action={}", key, action);
+
+			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+			switch (action)
 			{
-				RTR_CORE_TRACE("GLFWWindow Key callback! key={} action={}", key, action);
-
-				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					Event e = KeyPressedEvent{ static_cast<KeyCode>(key), false };
-					data.EventCallback(e);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					Event e = KeyReleasedEvent{ static_cast<KeyCode>(key) };
-					data.EventCallback(e);
-					break;
-				}
-				case GLFW_REPEAT:
-				{
-					Event e = KeyPressedEvent{ static_cast<KeyCode>(key), true };
-					data.EventCallback(e);
-					break;
-				}
-				}
-			});
+			case GLFW_PRESS:
+			{
+				Event e = KeyPressedEvent{ static_cast<KeyCode>(key), false };
+				data.EventCallback(e);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				Event e = KeyReleasedEvent{ static_cast<KeyCode>(key) };
+				data.EventCallback(e);
+				break;
+			}
+			case GLFW_REPEAT:
+			{
+				Event e = KeyPressedEvent{ static_cast<KeyCode>(key), true };
+				data.EventCallback(e);
+				break;
+			}
+			}
+		});
 
 		glfwSetCharCallback(m_Window,
-			[](GLFWwindow* window, unsigned int codepoint)
-			{
-				RTR_CORE_TRACE("GLFWWindow Char callback! codepoint={}", codepoint);
+		[](GLFWwindow* window, unsigned int codepoint)
+		{
+			ImGui_ImplGlfw_CharCallback(window, codepoint);
+			RTR_CORE_TRACE("GLFWWindow Char callback! codepoint={}", codepoint);
 
-				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-				Event e = KeyTypedEvent{ codepoint };
-				data.EventCallback(e);
-			});
+			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+			Event e = KeyTypedEvent{ codepoint };
+			data.EventCallback(e);
+		});
 
 		glfwSetMouseButtonCallback(m_Window,
-			[](GLFWwindow* window, int button, int action, int /*mods*/)
+		[](GLFWwindow* window, int button, int action, int mods)
+		{
+			ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP MouseButton callback! button={} action={}", button, action);
+
+			switch (action)
 			{
-				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
-				RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP MouseButton callback! button={} action={}", button, action);
-
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					Event e = MouseButtonPressedEvent{ static_cast<MouseCode>(button) };
-					data.EventCallback(e);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					Event e = MouseButtonReleasedEvent{ static_cast<MouseCode>(button) };
-					data.EventCallback(e);
-					break;
-				}
-				}
-			});
+			case GLFW_PRESS:
+			{
+				Event e = MouseButtonPressedEvent{ static_cast<MouseCode>(button) };
+				data.EventCallback(e);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				Event e = MouseButtonReleasedEvent{ static_cast<MouseCode>(button) };
+				data.EventCallback(e);
+				break;
+			}
+			}
+		});
 
 		glfwSetScrollCallback(m_Window,
-			[](GLFWwindow* window, double xOffset, double yOffset)
-			{
-				RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP Scroll callback! xOffset={} yOffset={}", xOffset, yOffset);
+		[](GLFWwindow* window, double xOffset, double yOffset)
+		{
+			ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP Scroll callback! xOffset={} yOffset={}", xOffset, yOffset);
 
-				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-				Event e = MouseScrolledEvent{
-					static_cast<float>(xOffset),
-					static_cast<float>(yOffset)
-				};
-				data.EventCallback(e);
-			});
+			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+			Event e = MouseScrolledEvent{
+				static_cast<float>(xOffset),
+				static_cast<float>(yOffset)
+			};
+			data.EventCallback(e);
+		});
 
 		glfwSetCursorPosCallback(m_Window,
-			[](GLFWwindow* window, double x, double y)
-			{
-				// RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP CursorPos callback! x={} y={}", x, y);
+		[](GLFWwindow* window, double x, double y)
+		{
+			ImGui_ImplGlfw_CursorPosCallback(window, x, y);
+			// RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP CursorPos callback! x={} y={}", x, y);
 
-				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-				Event e = MouseMovedEvent{
-					static_cast<float>(x),
-					static_cast<float>(y)
-				};
-				data.EventCallback(e);
-			});
+			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+			Event e = MouseMovedEvent{
+				static_cast<float>(x),
+				static_cast<float>(y)
+			};
+			data.EventCallback(e);
+		});
 	}
 }

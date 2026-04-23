@@ -1,12 +1,15 @@
 #include <RTR/RTR.h>
 
+#include "layers/TestLayer.h"
+
 class Sandbox : public RTR::Application
 {
 public:
 	explicit Sandbox(const RTR::ApplicationSpecification& spec)
 		: RTR::Application(spec)
 	{
-		RTR_INFO("Sandbox created!");
+		RTR_INFO("Sandbox created");
+		PushLayer(std::make_unique<TestLayer>());
 	}
 
 	~Sandbox()

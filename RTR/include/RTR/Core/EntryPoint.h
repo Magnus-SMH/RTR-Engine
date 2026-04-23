@@ -9,12 +9,12 @@ int main(int argc, char** argv)
 {
 #ifdef RTR_ENABLE_LOGGING
 	RTR::Log::Init();
-	RTR_CORE_WARN("Engine starting");
+	RTR_CORE_INFO("Engine starting");
 #endif
 	{
 		auto app = CreateApplication({ argc, argv });
 		app->Run();
 	}
-	RTR_CORE_WARN("Engine shutdown");
+	RTR_CORE_INFO("Engine shutdown");
 }
 

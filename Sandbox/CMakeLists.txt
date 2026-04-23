@@ -5,6 +5,7 @@ endif()
 add_executable(Sandbox ${RTR_WIN32_FLAG}
     src/SandboxApp.cpp
     src/main.cpp
+    src/layers/TestLayer.cpp
 )
 
 target_compile_options(Sandbox PRIVATE

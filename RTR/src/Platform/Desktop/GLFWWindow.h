@@ -1,8 +1,7 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-
 #include "RTR/Core/Window.h"
+#include "RTR/Renderer/GraphicsContext.h"
 
 namespace RTR
 {
@@ -31,6 +30,7 @@ namespace RTR
 		void RegisterCallbacks();
 
 		GLFWwindow* m_Window = nullptr;
+		std::unique_ptr<GraphicsContext> m_Context = nullptr;
 
 		struct WindowData
 		{

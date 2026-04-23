@@ -36,8 +36,8 @@ namespace RTR
 		virtual void OnImGuiRender() {}
 #endif
 
-		// Todo: implement Transition later
-		// virtual void Transition() {}
+		// Todo: implement
+		virtual void Transition() {}
 		virtual void Suspend() {}
 
 		LayerState GetState() const { return m_State; }

@@ -1,5 +1,9 @@
 #include "RTR/Core/Application.h"
 
+#ifndef RTR_HEADLESS
+	#include "RTR/Renderer/RenderCommand.h"
+#endif
+
 namespace RTR
 {
 	Application* Application::s_Instance = nullptr;
@@ -9,7 +13,7 @@ namespace RTR
 	{
 		if (signal == SIGINT || signal == SIGTERM)
 		{
-			RTR_CORE_WARN("Signal {0} received. Shutting down...", signal);
+			RTR_CORE_INFO("Signal {0} received. Shutting down...", signal);
 			if (s_AppInstance)
 				s_AppInstance->Close();
 		}
@@ -19,13 +23,13 @@ namespace RTR
 		: m_Spec(spec)
 	{
 		RTR_CORE_ASSERT(!s_Instance, "Application already exists!");
+		RTR_CORE_INFO("New Application: {0}", m_Spec.Name);
+
 		s_Instance = this;
 		s_AppInstance = this;
 
 		std::signal(SIGINT, SignalHandler);
 		std::signal(SIGTERM, SignalHandler);
-
-		RTR_CORE_INFO("Application name: {0}", m_Spec.Name);
 
 		if (!m_Spec.WorkingDirectory.empty())
 		{
@@ -39,12 +43,20 @@ namespace RTR
 
 #ifndef RTR_HEADLESS
 		
-		//Window Init
+		RTR_CORE_INFO("Window '{0}' ({1}x{2}) initialisation", spec.Window.Title, spec.Window.Width, spec.Window.Height);
 		m_Window = Window::Create(spec.Window);
 		m_Window->SetEventCallback([this](Event& event) { OnEvent(event); });
-		RTR_CORE_INFO("Window Created!  {}x{}", spec.Window.Width, spec.Window.Height);
+
+		//Renderer Init
+		RenderCommand::Init();
+
+		//ImGuiLayer Init
+		auto imguiLayer = std::make_unique<ImGuiLayer>();
+		m_ImGuiLayer = imguiLayer.get();
+		m_LayerStack.PushOverlay(std::move(imguiLayer));
+
 #else
-		RTR_CORE_WARN("Running in headless mode.");
+		RTR_CORE_INFO("Running in headless mode.");
 #endif
 	}
 
@@ -58,13 +70,11 @@ namespace RTR
 
 	void Application::PushLayer(std::unique_ptr<Layer> layer)
 	{
-		layer->OnAttach();
 		m_LayerStack.PushLayer(std::move(layer));
 	}
 
 	void Application::PushOverlay(std::unique_ptr<Layer> overlay)
 	{
-		overlay->OnAttach();
 		m_LayerStack.PushOverlay(std::move(overlay));
 	}
 
@@ -106,12 +116,10 @@ namespace RTR
 		return false;
 	}
 
-	// Simple tick system, for the time being in run, refactor out to src/network later
+	//Simple tick system, for the time being in run, refactor out to src/network later
 	void Application::Run()
 	{
-
-		constexpr double TICK_RATE = 64.0;
-		constexpr double TICK_INTERVAL = 1.0 / TICK_RATE;
+		//Swap buffers and poll events
 
 		while (m_Running)
 		{
@@ -119,24 +127,31 @@ namespace RTR
 			float deltaTime = static_cast<float>(time - m_LastFrameTime);
 			deltaTime = std::clamp(deltaTime, 0.001f, 0.1f);
 			m_LastFrameTime = time;
+			m_DeltaTime = deltaTime;
 
-
+			//Technical debt <3
 			m_TickAccumulator += deltaTime;
-			if (m_TickAccumulator >= TICK_INTERVAL)
+			if (m_TickAccumulator >= m_TickTargetDelta)
 			{
-				m_TickAccumulator -= TICK_INTERVAL;
-				float tickDelta = static_cast<float>(TICK_INTERVAL);
+				m_TickAccumulator -= m_TickTargetDelta;
+				double tickStart = Platform::GetTime();
+				float tickDelta = static_cast<float>(m_TickTargetDelta);
 
 				//RTR_CORE_TRACE("Tick: {0:.3f} ms", tickDelta * 1000.0f);
 
 				for (auto& layer : m_LayerStack)
 					if (layer->IsAttached())
 						layer->OnTick(tickDelta);
+
+				m_TickWorkTime = static_cast<float>(Platform::GetTime() - tickStart);
 			}
+
+
 #ifdef RTR_HEADLESS
-			if (m_TickAccumulator < TICK_INTERVAL)
+			//Technical debt <3
+			if (m_TickAccumulator < m_TickTargetDelta)
 			{
-				double sleepTime = TICK_INTERVAL - m_TickAccumulator;
+				double sleepTime = m_TickTargetDelta - m_TickAccumulator;
 				std::this_thread::sleep_for(
 					std::chrono::duration<double>(sleepTime * 0.9)
 				);
@@ -144,17 +159,25 @@ namespace RTR
 #endif
 
 #ifndef RTR_HEADLESS
+
+			m_Window->OnUpdate();
+
 			if (!m_Minimized)
 			{
+				RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+				RenderCommand::Clear();
+
+				//Update layers
 				for (auto& layerPtr : m_LayerStack)
 					if (layerPtr->IsAttached())
 						layerPtr->OnUpdate(deltaTime);
-			
-				for (auto& layerPtr : m_LayerStack)
-					if (layerPtr->IsAttached())
-						layerPtr->OnImGuiRender();
 
-				m_Window->OnUpdate();
+				//ImGui Rendering
+				m_ImGuiLayer->Begin();
+				for (auto& layer : m_LayerStack)
+					if (layer->IsAttached())
+						layer->OnImGuiRender();
+				m_ImGuiLayer->End();
 			}
 #endif
 		}
