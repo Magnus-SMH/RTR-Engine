@@ -80,9 +80,6 @@ namespace RTR
 	private:
 
 		void Run();
-		void OnEvent(Event& event);
-		bool OnWindowClose(WindowCloseEvent& event);
-		bool OnWindowResize(WindowResizeEvent& event);
 
 		ApplicationSpecification m_Spec;
 		EngineStats m_Stats;
@@ -93,12 +90,17 @@ namespace RTR
 		//ImGui needs the poll events in OSThread to shutdown RendererThread cleanly
 		std::atomic<bool> temp_RendererFinished{ false };
 
-
 		static Application* s_Instance;
+
+		TripleBuffer<SimState> m_SimStateBuffer;
 
 #ifdef RTR_HEADLESS
 		void HeadlessRun();
 #else
+		void OnEvent(Event& event);
+		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
+
 		void SimThreadRun();
 		void OSThreadRun();
 		void RenderThreadRun();
@@ -109,8 +111,6 @@ namespace RTR
 		std::atomic<bool> m_Minimized{ false };
 
 		std::latch m_RenderReady{ 1 };
-
-		TripleBuffer<SimState> m_SimStateBuffer;
 
 		EventQueue m_OSEventQueue;
 		EventQueue m_SimEventQueue;

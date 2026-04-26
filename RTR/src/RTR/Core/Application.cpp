@@ -75,6 +75,8 @@ namespace RTR
 		m_LayerStack.PushOverlay(std::move(overlay));
 	}
 
+#ifndef RTR_HEADLESS
+
 	void Application::OnEvent(Event& event)
 	{
 		EventContext ctx{ event };
@@ -116,7 +118,7 @@ namespace RTR
 		return false;
 	}
 
-
+#endif
 
 	void Application::Run()
 	{
