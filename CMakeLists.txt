@@ -11,6 +11,9 @@ find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
 
+if(MSVC)
+    add_compile_options(/MP)
+endif()
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result OUTPUT error)

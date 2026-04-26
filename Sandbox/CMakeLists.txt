@@ -9,10 +9,20 @@ add_executable(Sandbox ${RTR_WIN32_FLAG}
 )
 
 target_compile_options(Sandbox PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /utf-8>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+    $<$<CXX_COMPILER_ID:MSVC>:
+		/W4
+		/WX
+		/utf-8
+		/permissive-
+		>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:
+		-Wall
+		-Wextra
+		-Wpedantic
+		-Werror
+		-Wshadow
+		>
 )
-
 target_link_libraries(Sandbox PRIVATE rtr_engine_full)
 
 # makes .map file for dist builds
@@ -24,11 +34,6 @@ if(MSVC AND RTR_BUILD_MODE STREQUAL "DIST")
 endif()
 
 target_compile_features(Sandbox PRIVATE cxx_std_23)
-
-target_compile_options(Sandbox PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
-)
 
 set_target_properties(Sandbox PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Sandbox"
