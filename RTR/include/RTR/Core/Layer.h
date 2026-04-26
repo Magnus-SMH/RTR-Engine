@@ -2,9 +2,17 @@
 
 #include "RTR/Core/Events.h"
 #include "RTR/Core/Base.h"
+#include "RTR/Core/SimState.h"
 
 namespace RTR
 {
+	enum class LayerAffinity
+	{
+		Sim,     //server,physics,game logic
+		Render,  //graphicsAPI rendering, ImGui
+		Both
+	};
+
 	enum class LayerState
 	{
 		Detatched,
@@ -23,15 +31,18 @@ namespace RTR
 
 		RTR_NON_COPYABLE(Layer);
 
+		virtual LayerAffinity GetAffinity() const { return LayerAffinity::Both; }
+
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 
 		virtual void OnSuspend(bool /*ReleaseResources*/) {}
 		virtual void OnResume() {}
 
-		virtual void OnUpdate(float /*deltaTime*/) {}
+		virtual void OnPollEvents(float /*deltaTime*/) {}
 		virtual void OnTick(float /*tickDelta*/) {}
 		virtual void OnEvent(EventContext& /*ctx*/) {}
+		virtual void OnRender(const SimState& /*snapshot*/, float /*deltaTime*/) {}
 #ifndef RTR_HEADLESS
 		virtual void OnImGuiRender() {}
 #endif

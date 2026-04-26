@@ -14,11 +14,15 @@ namespace RTR
 		ImGuiLayer();
 		~ImGuiLayer() override = default;
 
+		LayerAffinity GetAffinity() const override { return LayerAffinity::Render; }
+
 		void OnAttach() override;
 		void OnDetach() override;
-		void OnEvent(EventContext& ctx) override;
+		//void OnEvent(EventContext& ctx) override;
 
 		void OnImGuiRender() override;
+
+		void InitForRender(void* window);
 
 		void Begin();
 		void End();

@@ -7,7 +7,6 @@
 
 namespace RTR
 {
-
 	using KeyCode = uint16_t;
 	using MouseCode = uint8_t;
 
@@ -40,6 +39,8 @@ namespace RTR
 		MouseButtonPressedEvent,
 		MouseButtonReleasedEvent
 	>;
+
+	using EventCallbackFn = std::function<void(Event&)>;
 
 	class EventDispatcher
 	{

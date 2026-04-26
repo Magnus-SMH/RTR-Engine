@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 
 #include "RTR/Core/Layer.h"
 #include "RTR/Core/Base.h"
@@ -31,6 +32,8 @@ namespace RTR
 
 		auto begin() const { return m_Layers.cbegin(); }
 		auto end() const { return m_Layers.cend(); }
+		auto rbegin() const { return m_Layers.crbegin(); }
+		auto rend() const { return m_Layers.crend(); }
 
 	private:
 		std::vector<std::unique_ptr<Layer>> m_Layers;

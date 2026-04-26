@@ -27,6 +27,16 @@ namespace RTR
 		//RTR_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 6),"RTR requires OpenGL version 4.6 minimum");
 	}
 
+	void OpenGLContext::MakeCurrent()
+	{
+		glfwMakeContextCurrent(m_WindowHandle);
+	}
+
+	void OpenGLContext::Release()
+	{
+		glfwMakeContextCurrent(nullptr);
+	}
+
 	void OpenGLContext::SwapBuffers()
 	{
 		glfwSwapBuffers(m_WindowHandle);

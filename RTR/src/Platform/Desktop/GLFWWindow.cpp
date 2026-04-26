@@ -67,10 +67,9 @@ namespace RTR
 		}
 	}
 
-	void GLFWWindow::OnUpdate()
+	void GLFWWindow::PollEvents()
 	{
 		glfwPollEvents();
-		m_Context->SwapBuffers();
 	}
 
 	void GLFWWindow::SetVSync(bool enabled)
@@ -134,7 +133,7 @@ namespace RTR
 		glfwSetKeyCallback(m_Window,
 		[](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+			//ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 			RTR_CORE_TRACE("GLFWWindow Key callback! key={} action={}", key, action);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -165,7 +164,7 @@ namespace RTR
 		glfwSetCharCallback(m_Window,
 		[](GLFWwindow* window, unsigned int codepoint)
 		{
-			ImGui_ImplGlfw_CharCallback(window, codepoint);
+			//ImGui_ImplGlfw_CharCallback(window, codepoint);
 			RTR_CORE_TRACE("GLFWWindow Char callback! codepoint={}", codepoint);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -176,7 +175,7 @@ namespace RTR
 		glfwSetMouseButtonCallback(m_Window,
 		[](GLFWwindow* window, int button, int action, int mods)
 		{
-			ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+			//ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 
 			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP MouseButton callback! button={} action={}", button, action);
@@ -201,7 +200,7 @@ namespace RTR
 		glfwSetScrollCallback(m_Window,
 		[](GLFWwindow* window, double xOffset, double yOffset)
 		{
-			ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+			//ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
 			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP Scroll callback! xOffset={} yOffset={}", xOffset, yOffset);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -215,7 +214,7 @@ namespace RTR
 		glfwSetCursorPosCallback(m_Window,
 		[](GLFWwindow* window, double x, double y)
 		{
-			ImGui_ImplGlfw_CursorPosCallback(window, x, y);
+			//ImGui_ImplGlfw_CursorPosCallback(window, x, y);
 			// RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP CursorPos callback! x={} y={}", x, y);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));

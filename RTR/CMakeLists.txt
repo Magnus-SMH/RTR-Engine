@@ -119,7 +119,6 @@ target_include_directories(rtr_scene PUBLIC
 set(RTR_SERVER_SOURCES
     src/RTR/Server/GameWorld.cpp
     src/RTR/Server/ServerLayer.cpp
-    src/RTR/Server/TickClock.cpp
 )
 add_library(rtr_server STATIC
     ${RTR_SERVER_SOURCES}

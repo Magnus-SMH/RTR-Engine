@@ -14,6 +14,8 @@ namespace RTR
 
 		virtual void Init() override;
 		virtual void SwapBuffers() override;
+		virtual void MakeCurrent() override;
+		virtual void Release() override;
 
 	private:
 		GLFWwindow* m_WindowHandle;

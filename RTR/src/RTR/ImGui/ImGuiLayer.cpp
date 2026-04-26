@@ -36,28 +36,28 @@ namespace RTR
 			// 2. Performance Section (Using a Collapsing Header)
 			if (ImGui::CollapsingHeader("Performance Metrics", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				float deltaTime = m_App->GetDeltaTime();
-				static float frameGraph[300] = { 0 };
 				static int offset = 0;
-				frameGraph[offset] = deltaTime * 1000.0f;
-				
-				float tickWorkTime = m_App->GetTickWorkTime() * 1000.0f;
-				static float tickGraph[300] = { 0 };
-				tickGraph[offset] = tickWorkTime;
 
- 				const float tickTarget = m_App->GetTickTarget();
+ 				static float frameGraph[300] = { 0 };
+ 				static float tickGraph[300] = { 0 };
 
 
+				const EngineStats& stats = m_App->GetStats();
+				float renderDeltaMs = stats.renderDeltaMs.load();
+				float tickWorkTimeMs = stats.tickWorkTimeMs.load();
+				float tickTargetMs = stats.tickTargetMs.load();
+
+				// Frame graph
+				frameGraph[offset] = renderDeltaMs;
 				char frameLabel[32];
-				sprintf(frameLabel, "Avg: %.2f ms", deltaTime * 1000.0f);
+				snprintf(frameLabel, sizeof(frameLabel), "Delta: %.2f ms", renderDeltaMs);
 				ImGui::PlotLines("##FrameGraph", frameGraph, 300, offset, frameLabel, 0.0f, 50.0f, ImVec2(-1, 100));
 
-
+				// Tick graph
+				tickGraph[offset] = tickWorkTimeMs;
 				char tickLabel[32];
-				snprintf(tickLabel, sizeof(tickLabel), "Work: %.3f / Target: %.3f", tickWorkTime, tickTarget);
-				ImGui::PlotLines("##TickGraph", tickGraph, 300, offset, tickLabel, 0.0f, (tickTarget + 1.0f), ImVec2(-1, 100));
-
-
+				snprintf(tickLabel, sizeof(tickLabel), "Work: %.3f / Target: %.3f ms", tickWorkTimeMs, tickTargetMs);
+				ImGui::PlotLines("##TickGraph", tickGraph, 300, offset, tickLabel, 0.0f, tickTargetMs + 1.0f, ImVec2(-1, 100));
 				offset = (offset + 1) % 300;
 
 			}
@@ -102,19 +102,24 @@ namespace RTR
 					ImGui::EndTable();
 				}
 			}
-		}
-		ImGui::End();
+ 		}
+ 		ImGui::End();
 	}
 
 	void ImGuiLayer::OnAttach()
 	{
 		m_App = &Application::Get();
+	}
+
+	void ImGuiLayer::InitForRender(void* window)
+	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+ 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+ 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+// 		Viewport broke with the multithreading. Fix: Override imgui events with the engines event system
+// 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		ImGui::StyleColorsDark();
 
@@ -125,10 +130,9 @@ namespace RTR
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		Application& app = Application::Get();
-		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(window);
 
-		ImGui_ImplGlfw_InitForOpenGL(window, false);
+		ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
 		ImGui_ImplOpenGL3_Init("#version 460");
 	}
 
@@ -139,34 +143,15 @@ namespace RTR
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnEvent(EventContext& ctx)
-	{
-		if (!m_BlockEvents) return;
-
-		ImGuiIO& io = ImGui::GetIO();
-
-		// Consume mouse/keyboard events if ImGui wants them
-		if (ctx.IsMouseEvent() && io.WantCaptureMouse)
-		{
-			if (!std::holds_alternative<MouseMovedEvent>(ctx.Event))
-				RTR_CORE_DEBUG("Mouse event captured by ImGui");
-			ctx.Handled = true;
-		}
-
-		if (ctx.IsKeyEvent() && io.WantCaptureKeyboard)
-		{
-			RTR_CORE_DEBUG("Key event captured by ImGui");
-			ctx.Handled = true;
-		}
-	}
-
 	void ImGuiLayer::Begin()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
+
+		ImGui_ImplOpenGL3_NewFrame();
 		ImGui::NewFrame();
 	}
 
+	//
 	void ImGuiLayer::End()
 	{
 		ImGuiIO& io = ImGui::GetIO();

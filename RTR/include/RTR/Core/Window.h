@@ -7,14 +7,13 @@
 
 #include "RTR/Core/Events.h"
 #include "RTR/Core/Base.h"
+#include "RTR/Renderer/GraphicsContext.h"
 
 
 
 namespace RTR
 {
-	using EventCallbackFn = std::function<void(Event&)>;
-
-
+	
 	struct WindowSpecification
 	{
 		std::string Title = "RTR Engine";
@@ -32,7 +31,7 @@ namespace RTR
 
 		RTR_NON_COPYABLE(Window);
 
-		virtual void OnUpdate() = 0;
+		virtual void PollEvents() = 0;
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
@@ -46,6 +45,7 @@ namespace RTR
 
 		// Window Context for Renderer API
 		virtual void* GetNativeWindow() const = 0;
+		virtual GraphicsContext& GetGraphicsContext() = 0;
 
 		//Using factory function to not include platform specific headers
 		static std::unique_ptr<Window> Create(const WindowSpecification& spec = {});

@@ -11,7 +11,7 @@ namespace RTR
 		explicit GLFWWindow(const WindowSpecification& spec);
 		virtual ~GLFWWindow();
 
-		void OnUpdate() override;
+		void PollEvents() override;
 
 		uint32_t GetWidth() const override { return m_Data.Width; }
 		uint32_t GetHeight() const override { return m_Data.Height; }
@@ -23,6 +23,7 @@ namespace RTR
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override { return m_Data.VSync; }
 		void* GetNativeWindow() const override { return m_Window; }
+		GraphicsContext& GetGraphicsContext() override { return *m_Context; }
 
 	private:
 		void Init(const WindowSpecification& spec);

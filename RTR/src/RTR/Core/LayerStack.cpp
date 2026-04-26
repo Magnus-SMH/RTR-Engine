@@ -1,4 +1,5 @@
 #include "RTR/Core/LayerStack.h"
+#include "RTR/Core/Application.h"
 
 namespace RTR
 {
