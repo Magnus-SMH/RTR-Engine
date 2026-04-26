@@ -125,6 +125,8 @@ namespace RTR
 #ifdef RTR_HEADLESS
 		HeadlessRun();
 #else
+		//Give render thread ownership of opengl context
+		m_Window->GetGraphicsContext().Release();
 		
 		m_RenderThread = std::thread([this]() { RenderThreadRun(); });
 		m_SimThread = std::thread([this]() { SimThreadRun(); });
@@ -140,9 +142,6 @@ namespace RTR
 
 	void Application::OSThreadRun()
 	{
-		//Give render thread ownership of opengl context
-		m_Window->GetGraphicsContext().Release();
-
 		//Main thread loop
 		while (m_Running.load(std::memory_order_acquire))
 		{
