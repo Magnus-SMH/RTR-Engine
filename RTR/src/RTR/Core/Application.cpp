@@ -305,7 +305,7 @@ namespace RTR
 			if (tickCount == 0)
 				clock.SleepUntilNextTick();
 		}
-		RTR_CORE_INFO("HeadlessRun() exited.");
+		RTR_CORE_DEBUG("Headless Sim thread exiting");
 	}
 #endif
 

@@ -4,7 +4,6 @@ set(RTR_CORE_SOURCES
     src/RTR/Core/LayerStack.cpp
     src/RTR/Core/Log.cpp
     src/RTR/Core/UUID.cpp
-    src/RTR/Core/Application.cpp
 )
 add_library(rtr_core STATIC ${RTR_CORE_SOURCES})
 if(NOT RTR_HEADLESS)
@@ -21,6 +20,24 @@ target_precompile_headers(rtr_core PRIVATE
 target_include_directories(rtr_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+
+
+add_library(rtr_application STATIC src/RTR/Core/Application.cpp)
+if(NOT RTR_HEADLESS)
+    target_sources(rtr_application PRIVATE src/RTR/Core/Window.cpp)
+endif()
+target_link_libraries(rtr_application
+    PUBLIC rtr_core
+    PUBLIC rtr_platform
+    PUBLIC rtr_imgui
+    PUBLIC rtr_renderer
+)
+target_precompile_headers(rtr_application REUSE_FROM rtr_core)
+target_include_directories(rtr_application PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 
 
 add_library(rtr_assets_core STATIC
@@ -186,7 +203,7 @@ target_include_directories(rtr_engine_core INTERFACE
 )
 
 target_link_libraries(rtr_engine_core INTERFACE
-    rtr_core
+    rtr_application
     rtr_scene
     rtr_assets_core
     rtr_platform
