@@ -67,22 +67,22 @@ namespace RTR
 
 	struct EventContext
 	{
-		Event& Event;
+		Event& CurrentEvent;
 		bool   Handled = false;
 
 		bool IsMouseEvent() const
 		{
-			return std::holds_alternative<MouseMovedEvent>(Event) ||
-				std::holds_alternative<MouseScrolledEvent>(Event) ||
-				std::holds_alternative<MouseButtonPressedEvent>(Event) ||
-				std::holds_alternative<MouseButtonReleasedEvent>(Event);
+			return std::holds_alternative<MouseMovedEvent>(CurrentEvent) ||
+				std::holds_alternative<MouseScrolledEvent>(CurrentEvent) ||
+				std::holds_alternative<MouseButtonPressedEvent>(CurrentEvent) ||
+				std::holds_alternative<MouseButtonReleasedEvent>(CurrentEvent);
 		}
 
 		bool IsKeyEvent() const
 		{
-			return std::holds_alternative<KeyPressedEvent>(Event) ||
-				std::holds_alternative<KeyReleasedEvent>(Event) ||
-				std::holds_alternative<KeyTypedEvent>(Event);
+			return std::holds_alternative<KeyPressedEvent>(CurrentEvent) ||
+				std::holds_alternative<KeyReleasedEvent>(CurrentEvent) ||
+				std::holds_alternative<KeyTypedEvent>(CurrentEvent);
 		}
 	};
 

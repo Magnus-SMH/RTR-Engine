@@ -82,7 +82,7 @@ namespace RTR
 		EventContext ctx{ event };
 
 		//Main thread handles window close/resize events
-		EventDispatcher dispatcher(ctx.Event);
+		EventDispatcher dispatcher(ctx.CurrentEvent);
 		dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& event) { return OnWindowClose(event); });
 		dispatcher.Dispatch<WindowResizeEvent>([this](WindowResizeEvent& event) { return OnWindowResize(event); });
 
