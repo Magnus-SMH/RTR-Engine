@@ -18,7 +18,6 @@ namespace RTR
 
 		void OnAttach() override;
 		void OnDetach() override;
-		//void OnEvent(EventContext& ctx) override;
 
 		void OnImGuiRender() override;
 
@@ -26,9 +25,6 @@ namespace RTR
 
 		void Begin();
 		void End();
-
-		void BlockEvents(bool block) { m_BlockEvents = block; }
-
 	private:
 		bool m_BlockEvents = true;
 		Application* m_App = nullptr;

@@ -46,13 +46,15 @@ namespace RTR
 	{
 	public:
 		explicit EventDispatcher(Event& event)
-			: m_Event(event) {
+			: m_Event(event) 
+		{
 		}
 
 		template<typename T, typename Func>
 		bool Dispatch(Func&& func)
 		{
-			if (auto* e = std::get_if<T>(&m_Event)) {
+			if (auto* e = std::get_if<T>(&m_Event))
+			{
 				m_Handled = func(*e);
 				return true;
 			}
@@ -62,13 +64,13 @@ namespace RTR
 
 	private:
 		Event& m_Event;
-		bool   m_Handled = false;
+		bool m_Handled = false;
 	};
 
 	struct EventContext
 	{
 		Event& CurrentEvent;
-		bool   Handled = false;
+		bool Handled = false;
 
 		bool IsMouseEvent() const
 		{

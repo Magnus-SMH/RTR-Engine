@@ -133,38 +133,36 @@ namespace RTR
 		glfwSetKeyCallback(m_Window,
 		[](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			//ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 			RTR_CORE_TRACE("GLFWWindow Key callback! key={} action={}", key, action);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 
 			switch (action)
 			{
-			case GLFW_PRESS:
-			{
-				Event e = KeyPressedEvent{ static_cast<KeyCode>(key), false };
-				data.EventCallback(e);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				Event e = KeyReleasedEvent{ static_cast<KeyCode>(key) };
-				data.EventCallback(e);
-				break;
-			}
-			case GLFW_REPEAT:
-			{
-				Event e = KeyPressedEvent{ static_cast<KeyCode>(key), true };
-				data.EventCallback(e);
-				break;
-			}
+				case GLFW_PRESS:
+				{
+					Event e = KeyPressedEvent{ static_cast<KeyCode>(key), false };
+					data.EventCallback(e);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					Event e = KeyReleasedEvent{ static_cast<KeyCode>(key) };
+					data.EventCallback(e);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					Event e = KeyPressedEvent{ static_cast<KeyCode>(key), true };
+					data.EventCallback(e);
+					break;
+				}
 			}
 		});
 
 		glfwSetCharCallback(m_Window,
 		[](GLFWwindow* window, unsigned int codepoint)
 		{
-			//ImGui_ImplGlfw_CharCallback(window, codepoint);
 			RTR_CORE_TRACE("GLFWWindow Char callback! codepoint={}", codepoint);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -175,36 +173,35 @@ namespace RTR
 		glfwSetMouseButtonCallback(m_Window,
 		[](GLFWwindow* window, int button, int action, int mods)
 		{
-			//ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 
 			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP MouseButton callback! button={} action={}", button, action);
 
 			switch (action)
 			{
-			case GLFW_PRESS:
-			{
-				Event e = MouseButtonPressedEvent{ static_cast<MouseCode>(button) };
-				data.EventCallback(e);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				Event e = MouseButtonReleasedEvent{ static_cast<MouseCode>(button) };
-				data.EventCallback(e);
-				break;
-			}
+				case GLFW_PRESS:
+				{
+					Event e = MouseButtonPressedEvent{ static_cast<MouseCode>(button) };
+					data.EventCallback(e);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					Event e = MouseButtonReleasedEvent{ static_cast<MouseCode>(button) };
+					data.EventCallback(e);
+					break;
+				}
 			}
 		});
 
 		glfwSetScrollCallback(m_Window,
 		[](GLFWwindow* window, double xOffset, double yOffset)
 		{
-			//ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
 			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP Scroll callback! xOffset={} yOffset={}", xOffset, yOffset);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-			Event e = MouseScrolledEvent{
+			Event e = MouseScrolledEvent
+			{
 				static_cast<float>(xOffset),
 				static_cast<float>(yOffset)
 			};
@@ -214,11 +211,11 @@ namespace RTR
 		glfwSetCursorPosCallback(m_Window,
 		[](GLFWwindow* window, double x, double y)
 		{
-			//ImGui_ImplGlfw_CursorPosCallback(window, x, y);
 			// RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP CursorPos callback! x={} y={}", x, y);
 
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-			Event e = MouseMovedEvent{
+			Event e = MouseMovedEvent
+			{
 				static_cast<float>(x),
 				static_cast<float>(y)
 			};
