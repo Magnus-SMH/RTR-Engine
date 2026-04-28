@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef RTR_HEADLESS
-#include "RTR/Core/Window.h"
+#include "RTR/Core/WindowSpec.h"
 #include "RTR/ImGui/ImGuiLayer.h"
 #endif
 
@@ -19,6 +19,9 @@ int main(int argc, char** argv);
 
 namespace RTR
 {
+	class ImGuiLayer;
+	class Window;
+
 	struct ApplicationCommandLineArgs
 	{
 		int Count = 0;

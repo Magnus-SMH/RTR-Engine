@@ -1,8 +1,5 @@
 #include "RTR/Core/Input.h"
 
-
-#include <algorithm>
-
 namespace RTR
 {
     TripleBuffer<InputState> Input::s_TripleBuffer;

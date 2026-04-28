@@ -7,6 +7,7 @@
 #include <string>
 #include <variant>
 #include <format>
+#include <functional>
 
 namespace RTR
 {

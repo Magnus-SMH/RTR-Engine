@@ -31,8 +31,7 @@ endif()
 target_link_libraries(rtr_application
     PUBLIC rtr_core
     PUBLIC rtr_platform
-    PUBLIC rtr_imgui
-    PUBLIC rtr_renderer
+    PRIVATE rtr_imgui
 )
 target_precompile_headers(rtr_application REUSE_FROM rtr_core)
 target_include_directories(rtr_application PUBLIC

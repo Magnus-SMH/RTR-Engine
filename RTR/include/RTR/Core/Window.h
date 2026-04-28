@@ -7,23 +7,13 @@
 
 #include "RTR/Core/Events.h"
 #include "RTR/Core/Base.h"
+#include "RTR/Core/WindowSpec.h"
 #include "RTR/Renderer/GraphicsContext.h"
 
 
 
 namespace RTR
 {
-	
-	struct WindowSpecification
-	{
-		std::string Title = "RTR Engine";
-		uint32_t Width = 1280;
-		uint32_t Height = 720;
-		uint32_t PosX = 0;
-		uint32_t PosY = 0;
-		bool VSync = true;
-	};
-
 	class Window
 	{
 	public:

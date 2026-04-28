@@ -3,6 +3,7 @@
 #ifndef RTR_HEADLESS
 
 #include "RTR/Core/Application.h"
+#include "RTR/Core/Window.h"
 
 #include <imgui.h>
 #include <implot.h>

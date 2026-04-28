@@ -1,6 +1,7 @@
 #include "RTR/Core/Application.h"
 #include "RTR/Core/TickClock.h"
 #include "RTR/Core/Input.h"
+#include "RTR/Core/Window.h"
 
 #ifndef RTR_HEADLESS
 	#include "RTR/Renderer/RenderCommand.h"
