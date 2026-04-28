@@ -16,5 +16,9 @@ int main(int argc, char** argv)
 		app->Run();
 	}
 	RTR_CORE_INFO("Engine shutdown");
+
+#ifdef RTR_ENABLE_LOGGING
+	RTR::Log::Shutdown();
+#endif
 }
 

@@ -5,8 +5,25 @@
 #include "RTR/Core/Application.h"
 
 #include <imgui.h>
+#include <implot.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+
+int FPS = 0;
+
+struct CircularBufferGetter
+{
+	const float* buf;
+	int offset;
+	int size;
+};
+
+ImPlotPoint GetCircularValue(int idx, void* user_data)
+{
+	auto* data = static_cast<CircularBufferGetter*>(user_data);
+	int i = (data->offset + idx) % data->size;
+	return ImPlotPoint((double)idx, (double)data->buf[i]);
+}
 
 namespace RTR
 {
@@ -40,25 +57,53 @@ namespace RTR
 				ImGui::SeparatorText("Performance Metrics");
 
 				static int offset = 0;
+
 				static float frameGraph[300] = { 0 };
 				static float tickGraph[300] = { 0 };
+				static float tickTargetGraph[300] = { 0 };
+
 
 				const EngineStats& stats = m_App->GetStats();
 				float renderDeltaMs = stats.renderDeltaMs.load();
 				float tickWorkTimeMs = stats.tickWorkTimeMs.load();
 				float tickTargetMs = stats.tickTargetMs.load();
 
+
 				//Frame graph
 				frameGraph[offset] = renderDeltaMs;
-				char frameLabel[32];
-				snprintf(frameLabel, sizeof(frameLabel), "Delta: %.2f ms", renderDeltaMs);
-				ImGui::PlotLines("##FrameGraph", frameGraph, 300, offset, frameLabel, 0.0f, 50.0f, ImVec2(-1, 100));
+				if (offset % 20 == 0)
+				{
+					FPS = renderDeltaMs > 0.0f ? static_cast<int>(1000.0f / renderDeltaMs) : 0;
+				}
+
+				ImGui::Text("Delta: %.2f ms  FPS: %d", renderDeltaMs, FPS);
+
+				ImPlot::BeginPlot("##FrameGraph", ImVec2(-1, 100), ImPlotFlags_NoLegend | ImPlotFlags_NoInputs);
+				ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoTickLabels, 0);
+				ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 50.0f, ImGuiCond_Always);
+
+				CircularBufferGetter frameGetter = { frameGraph, offset, 300 };
+				ImPlot::PlotLineG("Frame Time", GetCircularValue, &frameGetter, 300);
+
+				ImPlot::EndPlot();
 
 				//Tick graph
 				tickGraph[offset] = tickWorkTimeMs;
-				char tickLabel[32];
-				snprintf(tickLabel, sizeof(tickLabel), "Work: %.3f / Target: %.3f ms", tickWorkTimeMs, tickTargetMs);
-				ImGui::PlotLines("##TickGraph", tickGraph, 300, offset, tickLabel, 0.0f, tickTargetMs + 1.0f, ImVec2(-1, 100));
+				tickTargetGraph[offset] = tickTargetMs;
+
+				ImGui::Text("Tick Work: %.2f ms  Target: %.2f ms", tickWorkTimeMs, tickTargetMs);
+				ImPlot::BeginPlot("##TickGraph", ImVec2(-1, 100), ImPlotFlags_NoLegend | ImPlotFlags_NoInputs);
+				ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoTickLabels, 0);
+				ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, tickTargetMs * 1.1f, ImGuiCond_Always);
+
+				CircularBufferGetter tickGetter = { tickGraph, offset, 300 };
+				ImPlot::PlotLineG("Work Time", GetCircularValue, &tickGetter, 300);
+
+				CircularBufferGetter tickTargetGetter = { tickTargetGraph, offset, 300 };
+				ImPlot::PlotLineG("Target Time", GetCircularValue, &tickTargetGetter, 300);
+
+				ImPlot::EndPlot();
+				
 				offset = (offset + 1) % 300;
 
 			}
@@ -128,6 +173,8 @@ namespace RTR
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
+		ImPlot::CreateContext();
+
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -146,6 +193,7 @@ namespace RTR
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
+		ImPlot::DestroyContext();
 		ImGui::DestroyContext();
 	}
 

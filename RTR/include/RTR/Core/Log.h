@@ -3,6 +3,8 @@
 #ifdef RTR_ENABLE_LOGGING
 	#include <spdlog/spdlog.h>
 	#include <spdlog/fmt/ostr.h>
+	#include <spdlog/async.h>
+	#include <spdlog/sinks/stdout_color_sinks.h>
 #endif
 
 namespace RTR
@@ -18,6 +20,7 @@ namespace RTR
 		{
 			Trace, Debug, Info, Warn, Error, Critical, Off
 		};
+		static void Shutdown();
 		static void SetLevel(Level level);
 #endif
 	private:

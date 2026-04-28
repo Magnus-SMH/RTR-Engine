@@ -1,5 +1,6 @@
 
 set(RTR_CORE_SOURCES
+    src/RTR/Core/Input.cpp
     src/RTR/Core/Layer.cpp
     src/RTR/Core/LayerStack.cpp
     src/RTR/Core/Log.cpp
@@ -77,6 +78,7 @@ add_library(rtr_imgui STATIC ${RTR_IMGUI_SOURCES})
 target_link_libraries(rtr_imgui
     PUBLIC rtr_core
     PUBLIC imgui
+    PUBLIC implot
     PRIVATE rtr_imgui_backend
 )
 target_precompile_headers(rtr_imgui REUSE_FROM rtr_core)

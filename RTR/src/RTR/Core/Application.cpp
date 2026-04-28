@@ -1,5 +1,6 @@
 #include "RTR/Core/Application.h"
 #include "RTR/Core/TickClock.h"
+#include "RTR/Core/Input.h"
 
 #ifndef RTR_HEADLESS
 	#include "RTR/Renderer/RenderCommand.h"
@@ -87,6 +88,8 @@ namespace RTR
 		dispatcher.Dispatch<WindowResizeEvent>([this](WindowResizeEvent& event) { return OnWindowResize(event); });
 
 		ctx.Handled = dispatcher.IsHandled();
+
+		Input::OnEvent(event);
 
 		//iterates the layers from back to front
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
@@ -186,6 +189,8 @@ namespace RTR
 			const int tickCount = clock.Update();
 			for (int i = 0; i < tickCount; ++i)
 			{
+				Input::FetchSnapshot();
+
 				const auto tickStart = std::chrono::steady_clock::now();
 
 				for (auto& layerPtr : m_LayerStack)
@@ -260,6 +265,8 @@ namespace RTR
 				m_ImGuiLayer->End();
 			}
 			m_Window->GetGraphicsContext().SwapBuffers();
+
+			Input::EndFrame();
 		}
 		//Temp fix!
 		temp_RendererFinished.store(true, std::memory_order_release);

@@ -8,6 +8,8 @@ public:
 
 	void OnEvent(RTR::EventContext& ctx) override;
 	void OnImGuiRender() override;
+	void OnTick(float /*tickDelta*/) override;
+	//void OnRender(const RTR::SimState& snapshot, float deltaTime) override;
 
 private:
 

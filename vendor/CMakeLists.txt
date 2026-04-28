@@ -50,3 +50,12 @@ target_link_libraries(rtr_imgui_backend
     PRIVATE glfw
     PRIVATE glad
 )
+
+add_library(implot STATIC
+    implot-master/implot.cpp
+    implot-master/implot_items.cpp
+)
+target_include_directories(implot PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/implot-master
+)
+target_link_libraries(implot PUBLIC imgui)

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "KeyCodes.h"
+#include "MouseCodes.h"
+
 #include <cstdint>
 #include <string>
 #include <variant>
@@ -7,15 +10,13 @@
 
 namespace RTR
 {
-	using KeyCode = uint16_t;
-	using MouseCode = uint8_t;
 
 	struct WindowMovedEvent { int32_t X, Y; };
 	struct WindowCloseEvent {};
 	struct WindowResizeEvent { uint32_t Width, Height; };
 	struct WindowFocusEvent { bool Focused; };
 
-	struct KeyPressedEvent { KeyCode  Key; bool IsRepeat = false; };
+	struct KeyPressedEvent { KeyCode  Key; };
 	struct KeyReleasedEvent { KeyCode Key; };
 	struct KeyTypedEvent { uint32_t Codepoint; };
 
