@@ -2,6 +2,8 @@
 #include "RTR/Core/TickClock.h"
 #include "RTR/Core/Input.h"
 #include "RTR/Core/Window.h"
+#include "RTR/Renderer/Renderer.h"
+#include "RTR/Server/ServerLayer.h"
 
 #ifndef RTR_HEADLESS
 	#include "RTR/Renderer/RenderCommand.h"
@@ -47,8 +49,11 @@ namespace RTR
 		m_Window->SetEventCallback([this](Event event)
 			{
 				//Push events into OS event queue
-				m_OSEventQueue.Push(std::move(event));
+				m_RenderEventQueue.Push(std::move(event));
 			});
+
+		m_GPUMeshCache = std::make_unique<GPUMeshCache>();
+
 
 		auto imgui = std::make_unique<ImGuiLayer>();
 		m_ImGuiLayer = imgui.get();
@@ -62,6 +67,7 @@ namespace RTR
 
 	Application::~Application()
 	{
+		m_AssetLoader.Shutdown();
 		for (auto& layerPtr : m_LayerStack)
 			layerPtr->OnDetach();
 		s_Instance = nullptr;
@@ -84,11 +90,11 @@ namespace RTR
 		EventContext ctx{ event };
 
 		//Main thread handles window close/resize events
-		EventDispatcher dispatcher(ctx.CurrentEvent);
+		EventDispatcher dispatcher(ctx.currentEvent);
 		dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& event) { return OnWindowClose(event); });
 		dispatcher.Dispatch<WindowResizeEvent>([this](WindowResizeEvent& event) { return OnWindowResize(event); });
 
-		ctx.Handled = dispatcher.IsHandled();
+		ctx.handled = dispatcher.IsHandled();
 
 		Input::OnEvent(event);
 
@@ -96,20 +102,20 @@ namespace RTR
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
 			Layer& layer = **it;
-			if (ctx.Handled) break;
+			if (ctx.handled) break;
 			if (layer.IsAttached() && layer.GetAffinity() != LayerAffinity::Sim)
 			{
 				layer.OnEvent(ctx);
 			}
 		}
 
-		if (!ctx.Handled && (ctx.IsMouseEvent() || ctx.IsKeyEvent()))
+		if (!ctx.handled && (ctx.IsMouseEvent() || ctx.IsKeyEvent()))
 			m_SimEventQueue.Push(event);
 
 	}
 
 
-	bool Application::OnWindowClose(WindowCloseEvent& event)
+	bool Application::OnWindowClose(WindowCloseEvent& /*event*/)
 	{
 		RTR_CORE_INFO("WindowCloseEvent received! Shutting down.");
 		m_Running.store(false, std::memory_order_release);
@@ -118,7 +124,7 @@ namespace RTR
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
-		m_Minimized.store(event.Width == 0 || event.Height == 0, std::memory_order_release);
+		m_Minimized.store(event.width == 0 || event.height == 0, std::memory_order_release);
 		return false;
 	}
 
@@ -181,7 +187,7 @@ namespace RTR
 					for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 					{
 						Layer& layer = **it;
-						if (ctx.Handled) break;
+						if (ctx.handled) break;
 						if (layer.IsAttached() && layer.GetAffinity() != LayerAffinity::Render)
 							layer.OnEvent(ctx);
 					}
@@ -207,6 +213,9 @@ namespace RTR
 				snap.tickDelta = clock.GetTickDelta();
 				snap.simTimeSeconds = static_cast<double>(snap.tickIndex) * clock.GetTickDurationD();
 				snap.isPaused = m_Paused.load(std::memory_order_relaxed);
+
+				m_Scene.ExtractRenderData(snap);
+
 				m_SimStateBuffer.Publish();
 
 				const auto tickEnd = std::chrono::steady_clock::now();
@@ -224,7 +233,8 @@ namespace RTR
 	void Application::RenderThreadRun()
 	{
 		m_Window->GetGraphicsContext().MakeCurrent();
-		RenderCommand::Init();
+		//RenderCommand::Init();
+		Renderer::Init();
 
 		m_ImGuiLayer->InitForRender(m_Window->GetNativeWindow());
 
@@ -239,7 +249,12 @@ namespace RTR
 			startRenderTime = now;
 			m_Stats.renderDeltaMs.store(renderDelta * 1000.0f, std::memory_order_relaxed);
 
-			m_OSEventQueue.Flush([this](Event& event) { OnEvent(event); });
+			m_RenderEventQueue.Flush([this](Event& event) { OnEvent(event); });
+
+			m_AssetLoader.ProcessUploadQueue([this](const CPUMesh& mesh)
+				{
+					m_GPUMeshCache->Upload(mesh);
+				});
 
 			m_SimStateBuffer.Fetch();
 			const SimState& snapshot = m_SimStateBuffer.Get();

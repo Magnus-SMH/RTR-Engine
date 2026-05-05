@@ -1,19 +1,41 @@
 #pragma once
 #include "RTR/Core/Layer.h"
-#include "RTR/Core/TickClock.h"
 
 namespace RTR
 {
+    class AssetManager;
+    class AssetLoader;
+    class Scene;
+    class EventQueue;
+
 	class ServerLayer : public Layer
 	{
 	public:
-		ServerLayer();
+		ServerLayer(
+            AssetManager& assetManager,
+            AssetLoader& assetLoader,
+            Scene& scene,
+            EventQueue& renderEventQueue)
+            : Layer("ServerLayer"),
+            m_AssetManager(assetManager),
+            m_AssetLoader(assetLoader),
+            m_Scene(scene),
+            m_RenderEventQueue(renderEventQueue)
+        {
+        }
 		virtual ~ServerLayer() = default;
 
-		void OnAttach() override { RTR_CORE_INFO("ServerLayer attached"); }
-		void OnDetach() override { RTR_CORE_INFO("ServerLayer detached"); }
-		void OnTick(float tickDelta) override
-		{
-		}
+        LayerAffinity GetAffinity() const override { return LayerAffinity::Sim; }
+
+        void OnAttach() override;
+        void OnDetach() override;
+        void OnEvent(EventContext ctx) override;
+		void OnTick(float /*tickDelta*/) override;
+
+    private:
+        AssetManager& m_AssetManager;
+        AssetLoader& m_AssetLoader;
+        Scene& m_Scene;
+        EventQueue& m_RenderEventQueue;
 	};
 }

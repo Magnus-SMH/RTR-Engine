@@ -18,6 +18,7 @@
 #include <thread>
 #include <stdexcept>
 #include <csignal>
+#include <vector>
 
 #define TINYGLTF_NO_STB_IMAGE_WRITE
 #include <tiny_gltf.h>

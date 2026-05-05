@@ -8,21 +8,6 @@ add_executable(Sandbox ${RTR_WIN32_FLAG}
     src/layers/TestLayer.cpp
 )
 
-target_compile_options(Sandbox PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:
-		/W4
-		/WX
-		/utf-8
-		/permissive-
-		>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:
-		-Wall
-		-Wextra
-		-Wpedantic
-		-Werror
-		-Wshadow
-		>
-)
 target_link_libraries(Sandbox PRIVATE rtr_engine_full)
 
 # makes .map file for dist builds
@@ -37,4 +22,8 @@ target_compile_features(Sandbox PRIVATE cxx_std_23)
 
 set_target_properties(Sandbox PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Sandbox"
+)
+
+target_compile_definitions(Sandbox PRIVATE 
+    RTR_ASSETS_DIR="${CMAKE_SOURCE_DIR}/Sandbox/assets"
 )

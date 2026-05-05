@@ -3,6 +3,7 @@
 #ifndef RTR_HEADLESS
 #include "RTR/Core/WindowSpec.h"
 #include "RTR/ImGui/ImGuiLayer.h"
+#include "RTR/Renderer/GPUMeshCache.h"
 #endif
 
 #include "RTR/Core/Base.h"
@@ -10,6 +11,10 @@
 #include "RTR/Core/Events.h"
 #include "RTR/Core/EventQueue.h"
 #include "RTR/Core/SimState.h"
+#include "RTR/Core/TripleBuffer.h"
+#include "RTR/Scene/Scene.h"
+#include "RTR/Assets/AssetManager.h"
+#include "RTR/Assets/AssetLoader.h"
 
 #include <latch>
 #include <thread>
@@ -71,6 +76,8 @@ namespace RTR
 #ifndef RTR_HEADLESS
 		Window& GetWindow() { return *m_Window; }
 		const Window& GetWindow() const { return *m_Window; }
+
+		GPUMeshCache* GetGPUMeshCache() { return m_GPUMeshCache.get(); }
 #endif
 
 		const ApplicationSpecification& GetSpec() const { return m_Spec; }
@@ -79,6 +86,12 @@ namespace RTR
 		EngineStats& GetStats() { return m_Stats; }
 		const EngineStats& GetStats() const { return m_Stats; }
 
+		AssetManager& GetAssetManager() { return m_AssetManager; }
+		AssetLoader& GetAssetLoader() { return m_AssetLoader; }
+		Scene& GetScene() { return m_Scene; }
+
+		EventQueue& GetRenderEventQueue() { return m_RenderEventQueue; }
+		EventQueue& GetSimEventQueue() { return m_SimEventQueue; }
 
 	private:
 
@@ -97,6 +110,11 @@ namespace RTR
 
 		TripleBuffer<SimState> m_SimStateBuffer;
 
+		Scene m_Scene;
+
+		AssetManager m_AssetManager;
+		AssetLoader m_AssetLoader{ m_AssetManager };
+
 #ifdef RTR_HEADLESS
 		void HeadlessRun();
 #else
@@ -111,11 +129,13 @@ namespace RTR
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer = nullptr;
 
+		std::unique_ptr<GPUMeshCache> m_GPUMeshCache;
+
 		std::atomic<bool> m_Minimized{ false };
 
 		std::latch m_RenderReady{ 1 };
 
-		EventQueue m_OSEventQueue;
+		EventQueue m_RenderEventQueue;
 		EventQueue m_SimEventQueue;
 		
 		std::thread m_SimThread;

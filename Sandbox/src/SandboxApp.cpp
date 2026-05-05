@@ -9,7 +9,18 @@ public:
 		: RTR::Application(spec)
 	{
 		RTR_INFO("Sandbox created");
-		PushLayer(std::make_unique<TestLayer>());
+
+		PushLayer(std::make_unique<RTR::ServerLayer>(
+			GetAssetManager(),
+			GetAssetLoader(),
+			GetScene(),
+			GetRenderEventQueue()
+		));
+
+		PushLayer(std::make_unique<TestLayer>(
+			*GetGPUMeshCache(),
+			GetSimEventQueue()
+		));
 	}
 
 	~Sandbox()

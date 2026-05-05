@@ -10,6 +10,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
+find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
 
 if(MSVC)
     add_compile_options(/MP)
@@ -25,6 +26,12 @@ if(RTR_HEADLESS)
     add_compile_definitions(RTR_HEADLESS)
 endif()
 
+if(MSVC)
+    add_compile_options(/W4 /utf-8 /permissive-) #/WX
+else()
+    add_compile_options(-Wall -Wpedantic -Werror -Wshadow) #-Wextra
+endif()
+
 if (RTR_BUILD_MODE STREQUAL "DIST")
 	if(result)
 		set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
@@ -36,6 +43,7 @@ if (RTR_BUILD_MODE STREQUAL "DIST")
 	endif()
 elseif(RTR_BUILD_MODE STREQUAL "DEV")
 	add_compile_definitions(RTR_ENABLE_LOGGING)
+	add_compile_definitions(RTR_ENABLE_ASSERTS)
 	add_compile_definitions(SPDLOG_ACTIVE_LEVEL=2) #info
 elseif(RTR_BUILD_MODE STREQUAL "DEBUG")
 	add_compile_definitions(RTR_ENABLE_ASSERTS)

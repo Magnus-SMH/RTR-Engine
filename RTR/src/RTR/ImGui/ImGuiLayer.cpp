@@ -160,14 +160,14 @@ namespace RTR
 		m_App = &Application::Get();
 	}
 
-	void ImGuiLayer::OnEvent(EventContext& ctx)
+	void ImGuiLayer::OnEvent(EventContext ctx)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		if (ctx.IsMouseEvent() && io.WantCaptureMouse)
-			ctx.Handled = true;
+			ctx.handled = true;
 
 		if (ctx.IsKeyEvent() && io.WantCaptureKeyboard)
-			ctx.Handled = true;
+			ctx.handled = true;
 	}
 
 	void ImGuiLayer::InitForRender(void* window)

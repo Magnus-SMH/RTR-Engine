@@ -25,14 +25,13 @@ target_include_directories(rtr_core PUBLIC
 
 
 add_library(rtr_application STATIC src/RTR/Core/Application.cpp)
-if(NOT RTR_HEADLESS)
-    target_sources(rtr_application PRIVATE src/RTR/Core/Window.cpp)
-endif()
 target_link_libraries(rtr_application
     PUBLIC rtr_core
     PUBLIC rtr_platform
-    PRIVATE rtr_imgui
 )
+if(NOT RTR_HEADLESS)
+    target_link_libraries(rtr_application PRIVATE rtr_imgui)
+endif()
 target_precompile_headers(rtr_application REUSE_FROM rtr_core)
 target_include_directories(rtr_application PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -43,15 +42,18 @@ target_include_directories(rtr_application PUBLIC
 add_library(rtr_assets_core STATIC
     src/RTR/Assets/AssetManager.cpp
     src/RTR/Assets/MeshLoader.cpp
-
+    src/RTR/Assets/AssetLoader.cpp
+    
 )
 target_link_libraries(rtr_assets_core
     PUBLIC rtr_core
+    PRIVATE glm::glm
 )
 target_precompile_headers(rtr_assets_core REUSE_FROM rtr_core)
 target_include_directories(rtr_assets_core
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE ${TINYGLTF_INCLUDE_DIRS}
 )
 
 
@@ -81,14 +83,13 @@ target_link_libraries(rtr_imgui
     PRIVATE rtr_imgui_backend
 )
 target_precompile_headers(rtr_imgui REUSE_FROM rtr_core)
-target_include_directories(rtr_imgui PUBLIC
+target_include_directories(rtr_imgui PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 
 
 set(RTR_RENDERER_SOURCES
-    src/RTR/Renderer/Buffer.cpp
     src/RTR/Renderer/Camera.cpp
     src/RTR/Renderer/Framebuffer.cpp
     src/RTR/Renderer/Material.cpp
@@ -98,13 +99,14 @@ set(RTR_RENDERER_SOURCES
     src/RTR/Renderer/Renderer3D.cpp
     src/RTR/Renderer/Shader.cpp
     src/RTR/Renderer/Texture.cpp
-    src/RTR/Renderer/VertexArray.cpp
+    src/RTR/Renderer/GPUMeshCache.cpp
 )
 add_library(rtr_renderer STATIC ${RTR_RENDERER_SOURCES})
 
 target_link_libraries(rtr_renderer
     PUBLIC rtr_core
     PUBLIC glm::glm
+    PRIVATE rtr_assets_core
 )
 target_precompile_headers(rtr_renderer PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTRPCH.h"
@@ -175,6 +177,8 @@ else()
         src/Platform/Desktop/GLFWWindow.cpp
         src/Platform/OpenGL/OpenGLRendererAPI.cpp
         src/RTR/Renderer/RendererAPI.cpp
+        src/RTR/Renderer/VertexArray.cpp
+        src/RTR/Renderer/Buffer.cpp
     )
 endif()
 target_link_libraries(rtr_platform

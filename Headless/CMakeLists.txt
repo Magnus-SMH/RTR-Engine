@@ -7,22 +7,6 @@ add_executable(Headless ${RTR_WIN32_FLAG}
     src/main.cpp
 )
 
-target_compile_options(Headless PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:
-		/W4
-		/WX
-		/utf-8
-		/permissive-
-		>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:
-		-Wall
-		-Wextra
-		-Wpedantic
-		-Werror
-		-Wshadow
-		>
-)
-
 target_link_libraries(Headless PRIVATE rtr_engine_core)
 
 # makes .map file for dist builds

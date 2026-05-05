@@ -24,7 +24,8 @@ namespace RTR
 		RTR_CORE_INFO("  Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
 		RTR_CORE_INFO("  Version: {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
-		//RTR_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 6),"RTR requires OpenGL version 4.6 minimum");
+		glEnable(GL_DEPTH_TEST);
+
 	}
 
 	void OpenGLContext::MakeCurrent()

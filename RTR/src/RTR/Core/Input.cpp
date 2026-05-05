@@ -8,20 +8,20 @@ namespace RTR
 
     void Input::OnEvent(Event& event)
     {
-        if (auto* key = std::get_if<KeyPressedEvent>(&event))
-            s_WriterState.Keys.set(static_cast<size_t>(key->Key));
+        if (auto* keyPressed = std::get_if<KeyPressedEvent>(&event))
+            s_WriterState.Keys.set(static_cast<size_t>(keyPressed->key));
 
-        else if (auto* key = std::get_if<KeyReleasedEvent>(&event))
-            s_WriterState.Keys.reset(static_cast<size_t>(key->Key));
+        else if (auto* keyReleased = std::get_if<KeyReleasedEvent>(&event))
+            s_WriterState.Keys.reset(static_cast<size_t>(keyReleased->key));
 
-        else if (auto* mouse = std::get_if<MouseButtonPressedEvent>(&event))
-            s_WriterState.MouseButtons.set(static_cast<size_t>(mouse->Button));
+        else if (auto* mousePressed = std::get_if<MouseButtonPressedEvent>(&event))
+            s_WriterState.MouseButtons.set(static_cast<size_t>(mousePressed->button));
 
-        else if (auto* mouse = std::get_if<MouseButtonReleasedEvent>(&event))
-            s_WriterState.MouseButtons.reset(static_cast<size_t>(mouse->Button));
+        else if (auto* mouseReleased = std::get_if<MouseButtonReleasedEvent>(&event))
+            s_WriterState.MouseButtons.reset(static_cast<size_t>(mouseReleased->button));
 
         else if (auto* move = std::get_if<MouseMovedEvent>(&event))
-            s_WriterState.MousePos = { move->X, move->Y };
+            s_WriterState.MousePos = { move->x, move->y };
     }
 
     void Input::EndFrame()

@@ -8,5 +8,6 @@ namespace RTR
 	public:
 		void SetClearColor(const glm::vec4& color) override;
 		void Clear() override;
+		void DrawIndexed(const std::shared_ptr<VertexArray>& va, uint32_t count = 0) override;
 	};
 }

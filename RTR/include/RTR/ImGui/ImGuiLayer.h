@@ -19,7 +19,7 @@ namespace RTR
 		void OnAttach() override;
 		void OnDetach() override;
 
-		void OnEvent(EventContext& ctx) override;
+		void OnEvent(EventContext ctx) override;
 
 		void OnImGuiRender() override;
 

@@ -8,8 +8,8 @@ namespace RTR
 {
 	enum class LayerAffinity
 	{
-		Sim,     //server,physics,game logic
-		Render,  //graphicsAPI rendering, ImGui
+		Sim,
+		Render,
 		Both
 	};
 
@@ -41,7 +41,7 @@ namespace RTR
 
 		virtual void OnPollEvents(float /*deltaTime*/) {}
 		virtual void OnTick(float /*tickDelta*/) {}
-		virtual void OnEvent(EventContext& /*ctx*/) {}
+		virtual void OnEvent(EventContext /*ctx*/) {}
 		virtual void OnRender(const SimState& /*snapshot*/, float /*deltaTime*/) {}
 #ifndef RTR_HEADLESS
 		virtual void OnImGuiRender() {}

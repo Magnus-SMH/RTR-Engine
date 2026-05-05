@@ -40,6 +40,11 @@ namespace RTR
 			RTR_CORE_INFO("Initialized GLFW");
 		}
 
+		glfwSetErrorCallback([](int error, const char* description)
+			{
+				RTR_CORE_ERROR("GLFW Error ({}): {}", error, description);
+			});
+
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		RTR_CORE_ASSERT(m_Window, "Failed to create GLFW window!");
@@ -86,8 +91,6 @@ namespace RTR
 		glfwSetWindowPosCallback(m_Window,
 			[](GLFWwindow* window, int xpos, int ypos)
 			{
-				RTR_CORE_TRACE("GLFWWindow Move callback! x={} y={}", xpos, ypos);
-
 				if (xpos == -32000 || ypos == -32000) return;
 
 				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -101,8 +104,6 @@ namespace RTR
 		glfwSetWindowSizeCallback(m_Window,
 			[](GLFWwindow* window, int width, int height)
 			{
-				RTR_CORE_TRACE("GLFWWindow Resize callback! width={} height={}", width, height);
-
 				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 				data.Width = static_cast<uint32_t>(width);
 				data.Height = static_cast<uint32_t>(height);
@@ -114,8 +115,6 @@ namespace RTR
 		glfwSetWindowCloseCallback(m_Window,
 		[](GLFWwindow* window)
 		{
-			RTR_CORE_TRACE("GLFWWindow Close callback!");
-
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 			Event event = WindowCloseEvent{};
 			data.EventCallback(event);
@@ -123,18 +122,14 @@ namespace RTR
 		glfwSetWindowFocusCallback(m_Window,
 			[](GLFWwindow* window, int focused)
 			{
-				RTR_CORE_TRACE("GLFWWindow Focus callback! focused={}", focused);
-
 				auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 				Event event = WindowFocusEvent{ focused == GLFW_TRUE };
 				data.EventCallback(event);
 			});
 
 		glfwSetKeyCallback(m_Window,
-		[](GLFWwindow* window, int key, int scancode, int action, int mods)
+		[](GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
 		{
-			//RTR_CORE_TRACE("GLFWWindow Key callback! key={} action={}", key, action);
-
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 
 			switch (action)
@@ -160,19 +155,15 @@ namespace RTR
 		//glfwSetCharCallback(m_Window,
 		//[](GLFWwindow* window, unsigned int codepoint)
 		//{
-		//	RTR_CORE_TRACE("GLFWWindow Char callback! codepoint={}", codepoint);
-
 		//	auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 		//	Event event = KeyTypedEvent{ codepoint };
 		//	data.EventCallback(event);
 		//});
 
 		glfwSetMouseButtonCallback(m_Window,
-		[](GLFWwindow* window, int button, int action, int mods)
+		[](GLFWwindow* window, int button, int action, int /*mods*/)
 		{
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
-			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP MouseButton callback! button={} action={}", button, action);
 
 			switch (action)
 			{
@@ -194,8 +185,6 @@ namespace RTR
 		glfwSetScrollCallback(m_Window,
 		[](GLFWwindow* window, double xOffset, double yOffset)
 		{
-			RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP Scroll callback! xOffset={} yOffset={}", xOffset, yOffset);
-
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 			Event event = MouseScrolledEvent
 			{
@@ -208,8 +197,6 @@ namespace RTR
 		glfwSetCursorPosCallback(m_Window,
 		[](GLFWwindow* window, double x, double y)
 		{
-			// RTR_CORE_TRACE("GLFW GLFWWINDOW.CPP CursorPos callback! x={} y={}", x, y);
-
 			auto& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 			Event event = MouseMovedEvent
 			{
