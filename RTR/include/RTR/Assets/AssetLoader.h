@@ -1,7 +1,9 @@
 #pragma once
 
 #include "RTR/Assets/AssetManager.h"
+#ifndef RTR_HEADLESS
 #include "RTR/Assets/MeshLoader.h"
+#endif
 #include "RTR/Assets/MeshData.h"
 
 #include <thread>
@@ -17,7 +19,9 @@ namespace RTR
         explicit AssetLoader(AssetManager& manager);
         ~AssetLoader();
 
+#ifndef RTR_HEADLESS //For now, until i make a custom baked asset for servers
         void RequestMeshLoad(UUID uuid, const std::string& path);
+#endif
 
         void ProcessUploadQueue(const std::function<void(const CPUMesh&)>& uploadFn);
 

@@ -9,8 +9,12 @@ namespace RTR
     {
     }
 
-    AssetLoader::~AssetLoader() { Shutdown(); }
+    AssetLoader::~AssetLoader()
+    {
+        Shutdown();
+    }
 
+#ifndef RTR_HEADLESS
     void AssetLoader::RequestMeshLoad(UUID uuid, const std::string& path)
     {
         m_AssetManager.MarkLoading(uuid);
@@ -36,6 +40,7 @@ namespace RTR
         std::scoped_lock lock(m_ThreadMutex);
         m_Threads.push_back(std::move(assetThread));
     }
+#endif
 
     void AssetLoader::ProcessUploadQueue(const std::function<void(const CPUMesh&)>& uploadFn)
     {

@@ -14,7 +14,7 @@ public:
 			GetAssetManager(),
 			GetAssetLoader(),
 			GetScene(),
-			GetRenderEventQueue()
+			GetSimEventQueue()
 		));
 
 		PushLayer(std::make_unique<TestLayer>(
@@ -37,7 +37,7 @@ std::unique_ptr<RTR::Application> CreateApplication(RTR::ApplicationCommandLineA
 	spec.CommandLineArgs = args;
 	spec.Window.Width = 1280;
 	spec.Window.Height = 720;
-	spec.Window.VSync = true;
+	spec.Window.VSync = false;
 
 	return std::make_unique<Sandbox>(spec);
 }

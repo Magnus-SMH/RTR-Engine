@@ -1,8 +1,10 @@
 #pragma once
 
 #ifndef RTR_HEADLESS
+	#ifndef RTR_NOGUI
+	#include "RTR/ImGui/ImGuiLayer.h"
+	#endif
 #include "RTR/Core/WindowSpec.h"
-#include "RTR/ImGui/ImGuiLayer.h"
 #include "RTR/Renderer/GPUMeshCache.h"
 #endif
 
@@ -24,7 +26,9 @@ int main(int argc, char** argv);
 
 namespace RTR
 {
+#ifndef RTR_NOGUI
 	class ImGuiLayer;
+#endif
 	class Window;
 
 	struct ApplicationCommandLineArgs
@@ -78,7 +82,10 @@ namespace RTR
 		const Window& GetWindow() const { return *m_Window; }
 
 		GPUMeshCache* GetGPUMeshCache() { return m_GPUMeshCache.get(); }
+
+		EventQueue& GetRenderEventQueue() { return m_RenderEventQueue; }
 #endif
+		EventQueue& GetSimEventQueue() { return m_SimEventQueue; }
 
 		const ApplicationSpecification& GetSpec() const { return m_Spec; }
 		static Application& Get();
@@ -90,8 +97,6 @@ namespace RTR
 		AssetLoader& GetAssetLoader() { return m_AssetLoader; }
 		Scene& GetScene() { return m_Scene; }
 
-		EventQueue& GetRenderEventQueue() { return m_RenderEventQueue; }
-		EventQueue& GetSimEventQueue() { return m_SimEventQueue; }
 
 	private:
 
@@ -115,6 +120,8 @@ namespace RTR
 		AssetManager m_AssetManager;
 		AssetLoader m_AssetLoader{ m_AssetManager };
 
+		EventQueue m_SimEventQueue;
+
 #ifdef RTR_HEADLESS
 		void HeadlessRun();
 #else
@@ -127,8 +134,10 @@ namespace RTR
 		void RenderThreadRun();
 
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer = nullptr;
 
+	#ifndef RTR_NOGUI
+		ImGuiLayer* m_ImGuiLayer = nullptr;
+	#endif
 		std::unique_ptr<GPUMeshCache> m_GPUMeshCache;
 
 		std::atomic<bool> m_Minimized{ false };
@@ -136,7 +145,6 @@ namespace RTR
 		std::latch m_RenderReady{ 1 };
 
 		EventQueue m_RenderEventQueue;
-		EventQueue m_SimEventQueue;
 		
 		std::thread m_SimThread;
 		std::thread m_RenderThread;

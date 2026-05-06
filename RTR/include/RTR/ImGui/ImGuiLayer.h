@@ -1,6 +1,7 @@
 #pragma once
 
 #ifndef RTR_HEADLESS
+#ifndef RTR_NOGUI
 
 #include "RTR/Core/Layer.h"
 
@@ -31,4 +32,5 @@ namespace RTR
 		Application* m_App = nullptr;
 	};
 }
+#endif
 #endif

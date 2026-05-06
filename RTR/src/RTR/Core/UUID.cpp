@@ -14,6 +14,7 @@ namespace RTR
 		: m_UUID(s_Distribution(s_Engine))
 	{
 	}
+
 	UUID::UUID(uint64_t uuid)
 		: m_UUID(uuid)
 	{

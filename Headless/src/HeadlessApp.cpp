@@ -1,5 +1,7 @@
 #include <RTR/RTR.h>
 
+#include "layers/HeadlessTestLayer.h"
+
 class Headless : public RTR::Application
 {
 public:
@@ -7,6 +9,18 @@ public:
 		: RTR::Application(spec)
 	{
 		RTR_INFO("Headless created!");
+
+		PushLayer(std::make_unique<RTR::ServerLayer>(
+			GetAssetManager(),
+			GetAssetLoader(),
+			GetScene(),
+			GetSimEventQueue()
+		));
+
+		PushLayer(std::make_unique<HeadlessTestLayer>(
+			GetSimEventQueue()
+		));
+
 	}
 
 	~Headless()

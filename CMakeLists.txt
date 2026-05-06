@@ -32,7 +32,8 @@ else()
     add_compile_options(-Wall -Wpedantic -Werror -Wshadow) #-Wextra
 endif()
 
-if (RTR_BUILD_MODE STREQUAL "DIST")
+if(RTR_BUILD_MODE STREQUAL "DIST")
+	add_compile_definitions(RTR_NOGUI) 
 	if(result)
 		set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 	endif()

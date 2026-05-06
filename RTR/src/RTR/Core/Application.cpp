@@ -1,12 +1,12 @@
 #include "RTR/Core/Application.h"
 #include "RTR/Core/TickClock.h"
-#include "RTR/Core/Input.h"
-#include "RTR/Core/Window.h"
-#include "RTR/Renderer/Renderer.h"
 #include "RTR/Server/ServerLayer.h"
 
 #ifndef RTR_HEADLESS
-	#include "RTR/Renderer/RenderCommand.h"
+#include "RTR/Core/Input.h"
+#include "RTR/Core/Window.h"
+#include "RTR/Renderer/Renderer.h"
+#include "RTR/Renderer/RenderCommand.h"
 #endif
 
 namespace RTR
@@ -48,16 +48,16 @@ namespace RTR
 		m_Window = Window::Create(spec.Window);	
 		m_Window->SetEventCallback([this](Event event)
 			{
-				//Push events into OS event queue
 				m_RenderEventQueue.Push(std::move(event));
 			});
 
 		m_GPUMeshCache = std::make_unique<GPUMeshCache>();
 
-
+	#ifndef RTR_NOGUI
 		auto imgui = std::make_unique<ImGuiLayer>();
 		m_ImGuiLayer = imgui.get();
 		m_LayerStack.PushOverlay(std::move(imgui));
+	#endif
 
 #else
 		RTR_CORE_INFO("Running in headless mode.");
@@ -235,8 +235,9 @@ namespace RTR
 		m_Window->GetGraphicsContext().MakeCurrent();
 		//RenderCommand::Init();
 		Renderer::Init();
-
+#ifndef RTR_NOGUI
 		m_ImGuiLayer->InitForRender(m_Window->GetNativeWindow());
+#endif
 
 		m_RenderReady.count_down();
 
@@ -270,7 +271,7 @@ namespace RTR
 					if (layer.IsAttached() && layer.GetAffinity() != LayerAffinity::Sim)
 						layer.OnRender(snapshot, renderDelta);
 				}
-
+				#ifndef RTR_NOGUI
 				m_ImGuiLayer->Begin();
 				for (auto& layerPtr : m_LayerStack)
 				{
@@ -279,6 +280,7 @@ namespace RTR
 						layer.OnImGuiRender();
 				}
 				m_ImGuiLayer->End();
+				#endif
 			}
 			m_Window->GetGraphicsContext().SwapBuffers();
 
@@ -300,6 +302,19 @@ namespace RTR
 
 		while (m_Running.load(std::memory_order_acquire))
 		{
+			m_SimEventQueue.Flush([this](Event& event)
+				{
+					EventContext ctx{ event };
+
+					for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
+					{
+						Layer& layer = **it;
+						if (ctx.handled) break;
+						if (layer.IsAttached() && layer.GetAffinity() != LayerAffinity::Render)
+							layer.OnEvent(ctx);
+					}
+				});
+
 			const int tickCount = clock.Update();
 			for (int i = 0; i < tickCount; ++i)
 			{
@@ -317,6 +332,9 @@ namespace RTR
 				snap.tickDelta = clock.GetTickDelta();
 				snap.simTimeSeconds = static_cast<double>(snap.tickIndex) * clock.GetTickDurationD();
 				snap.isPaused = m_Paused.load(std::memory_order_relaxed);
+
+				m_Scene.ExtractRenderData(snap);
+
 				m_SimStateBuffer.Publish();
 
 				const auto tickEnd = std::chrono::steady_clock::now();

@@ -14,6 +14,3 @@
 
 #include "RTR/ImGui/ImGuiLayer.h"
 #include "RTR/Server/ServerLayer.h"
-
-//only for testing
-#include <RTR/Assets/MeshLoader.h>

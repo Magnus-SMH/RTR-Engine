@@ -31,14 +31,15 @@ namespace RTR
             {
 
                 UUID uuid = m_AssetManager.RegisterAsset(event.path);
+#ifndef RTR_HEADLESS
                 m_AssetLoader.RequestMeshLoad(uuid, event.path);
-
+#endif
                 SceneObject obj;
                 obj.meshId = uuid;
                 obj.transform = glm::mat4(1.0f);
                 m_Scene.objects.push_back(obj);
 
-                m_RenderEventQueue.Push(LoadAssetAnswerEvent{ event.path, uuid });
+                m_SimEventQueue.Push(LoadAssetAnswerEvent{ event.path, uuid });
 
                 return true;
             }))

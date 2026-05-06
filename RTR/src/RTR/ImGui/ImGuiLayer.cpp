@@ -1,6 +1,7 @@
-#include "RTR/ImGui/ImGuiLayer.h"
-
 #ifndef RTR_HEADLESS
+#ifndef RTR_NOGUI
+
+#include "RTR/ImGui/ImGuiLayer.h"
 
 #include "RTR/Core/Application.h"
 #include "RTR/Core/Window.h"
@@ -218,4 +219,5 @@ namespace RTR
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 }
+#endif
 #endif

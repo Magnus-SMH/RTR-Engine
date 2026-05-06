@@ -78,10 +78,14 @@ add_library(rtr_imgui STATIC ${RTR_IMGUI_SOURCES})
 
 target_link_libraries(rtr_imgui
     PUBLIC rtr_core
+)
+if(NOT RTR_NOGUI)
+target_link_libraries(rtr_imgui
     PUBLIC imgui
     PUBLIC implot
     PRIVATE rtr_imgui_backend
 )
+endif()
 target_precompile_headers(rtr_imgui REUSE_FROM rtr_core)
 target_include_directories(rtr_imgui PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include

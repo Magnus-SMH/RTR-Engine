@@ -10,7 +10,6 @@ add_executable(Sandbox ${RTR_WIN32_FLAG}
 
 target_link_libraries(Sandbox PRIVATE rtr_engine_full)
 
-# makes .map file for dist builds
 if(MSVC AND RTR_BUILD_MODE STREQUAL "DIST")
     target_link_options(Sandbox PRIVATE "/ENTRY:mainCRTStartup")
 

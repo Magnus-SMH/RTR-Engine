@@ -15,14 +15,16 @@ namespace RTR
             AssetManager& assetManager,
             AssetLoader& assetLoader,
             Scene& scene,
-            EventQueue& renderEventQueue)
+            EventQueue& simEventQueue
+            )
             : Layer("ServerLayer"),
             m_AssetManager(assetManager),
             m_AssetLoader(assetLoader),
             m_Scene(scene),
-            m_RenderEventQueue(renderEventQueue)
+            m_SimEventQueue(simEventQueue)
         {
         }
+
 		virtual ~ServerLayer() = default;
 
         LayerAffinity GetAffinity() const override { return LayerAffinity::Sim; }
@@ -36,6 +38,7 @@ namespace RTR
         AssetManager& m_AssetManager;
         AssetLoader& m_AssetLoader;
         Scene& m_Scene;
-        EventQueue& m_RenderEventQueue;
+        EventQueue& m_SimEventQueue;
+
 	};
 }
